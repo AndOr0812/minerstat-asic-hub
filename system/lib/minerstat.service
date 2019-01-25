@@ -1,0 +1,15 @@
+[Unit]
+Description=minerstat-service
+After=network.target config.mount
+Requires=config.mount
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+PrivateTmp=no
+ExecStartPre=/bin/sh -c "mount -o remount,rw /"
+ExecStartPre=/bin/sh -c "sleep 40; screen -wipe; sleep 5;"
+ExecStart=/bin/sh /config/minerstat/minerstat.sh
+
+[Install]
+WantedBy=multi-user.target
