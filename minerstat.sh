@@ -29,7 +29,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     #############################
     # TESTING NC
     echo "-*-*-*-*-*-*-*-*-*-*-*-*"
-    rm error.log &> /dev/null
+    rm error.log 
+    
+    sleep 1
+    
     nc 2> error.log
 
     if grep -q found "error.log"; then
@@ -43,7 +46,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     	echo "NC IS OK!"
     fi
     
-    rm error.log &> /dev/null
+    rm error.log 
+    
+    sleep 1
+    
     cat minerstat.txt 2> error.log
 
     #############################
@@ -71,7 +77,11 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     #############################
     # TESTING CURL
-    rm error.log &> /dev/null
+    rm error.log 
+    
+    sleep 1
+    
+    
     curl 2> error.log
 
     if grep -q libcurl.so.5 "error.log"; then
@@ -371,8 +381,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             if [ $ASIC == "antminer" ]; then
                auto echo "RESTARTING MINER..."
                 sleep 2
-                /etc/init.d/cgminer.sh restart &> /dev/null
-                /etc/init.d/bmminer.sh restart &> /dev/null
+                /etc/init.d/cgminer.sh restart 
+                /etc/init.d/bmminer.sh restart 
             else
                 POSTDATA="REBOOT"
             fi
