@@ -65,8 +65,10 @@ rm /etc/systemd/system/multi-user.target.wants/minerstat.service
 #############################
 # TESTING NC
 echo "-*-*-*-*-*-*-*-*-*-*-*-*"
-rm error.log &> /dev/null
+rm error.log
 nc 2> error.log
+
+sleep 1
 
 if grep -q found "error.log"; then
     echo "NC PATCH APPLIED !"
@@ -163,8 +165,8 @@ cd $CONFIG_PATH
 screen -S minerstat -X quit # kill running process
 screen -S ms-run -X quit # kill running process
 screen -wipe
-rm -rf minerstat &> /dev/null
-rm minerstat.sh &> /dev/null
+rm -rf minerstat 
+rm minerstat.sh 
 
 mkdir minerstat
 chmod 777 minerstat
@@ -182,10 +184,10 @@ MODEL=$(sed -n 2p /usr/bin/compile_time)
 
 #############################
 # DOWNLOAD
-chmod 777 minerstat.sh &> /dev/null
-rm minerstat.sh &> /dev/null
+chmod 777 minerstat.sh 
+rm minerstat.sh 
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
-chmod 777 minerstat.sh &> /dev/null
+chmod 777 minerstat.sh
 
 #############################
 # SETTING UP USER
@@ -214,12 +216,12 @@ fi
 
 #############################
 # SETTING UP CRON
-rm runmeonboot &> /dev/null
-rm hbeat.sh &> /dev/null
-rm spond_start.sh &> /dev/null
-rm spond_beat.sh &> /dev/null
-rm baikal_beat.sh &> /dev/null
-rm inno_beat.sh &> /dev/null
+rm runmeonboot
+rm hbeat.sh 
+rm spond_start.sh
+rm spond_beat.sh 
+rm baikal_beat.sh 
+rm inno_beat.sh
 
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
@@ -230,12 +232,12 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
 
 
-chmod 777 runmeonboot &> /dev/null
-chmod 777 hbeat.sh &> /dev/null
-chmod 777 spond_start.sh &> /dev/null
-chmod 777 spond_beat.sh &> /dev/null
-chmod 777 baikal_beat.sh &> /dev/null
-chmod 777 inno_beat.sh &> /dev/null
+chmod 777 runmeonboot 
+chmod 777 hbeat.sh 
+chmod 777 spond_start.sh 
+chmod 777 spond_beat.sh
+chmod 777 baikal_beat.sh 
+chmod 777 inno_beat.sh 
 #ln -s runmeonboot /etc/rc.d/
 
 dir=$(pwd)
