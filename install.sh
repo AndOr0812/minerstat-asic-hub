@@ -166,13 +166,13 @@ screen -wipe
 rm -rf minerstat &> /dev/null
 rm minerstat.sh &> /dev/null
 
-mkdir minerstat 
+mkdir minerstat
 chmod 777 minerstat
 cd $CONFIG_PATH/minerstat
 
 if [ -f "/opt/scripta/etc/miner.conf" ]; then
 	mkdir /opt/scripta/etc/minerstat
-	chmod 777 /opt/scripta/etc/minerstat 
+	chmod 777 /opt/scripta/etc/minerstat
 	sleep 2
 	echo "Trying to step in baikal minerstat folder"
 	cd /opt/scripta/etc/minerstat
@@ -219,6 +219,7 @@ rm hbeat.sh &> /dev/null
 rm spond_start.sh &> /dev/null
 rm spond_beat.sh &> /dev/null
 rm baikal_beat.sh &> /dev/null
+rm inno_beat.sh &> /dev/null
 
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
@@ -226,12 +227,15 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/update.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/spond_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/baikal_beat.sh
+curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
+
 
 chmod 777 runmeonboot &> /dev/null
 chmod 777 hbeat.sh &> /dev/null
 chmod 777 spond_start.sh &> /dev/null
 chmod 777 spond_beat.sh &> /dev/null
 chmod 777 baikal_beat.sh &> /dev/null
+chmod 777 inno_beat.sh &> /dev/null
 #ln -s runmeonboot /etc/rc.d/
 
 dir=$(pwd)
@@ -249,11 +253,12 @@ if [ -f "/config/network.conf" ]; then
     else
         echo "cron not installed, installing"
         echo "screen -A -m -d -S minerstat sh /config/minerstat/minerstat.sh" >> /config/network.conf
-    fi	
+    fi
 fi
 
 if grep -q InnoMiner "/etc/issue"; then
-	echo "Cron not implemented yet"
+	#echo "Cron not implemented yet"
+
 	if [ -f "/etc/systemd/system/multi-user.target.wants/cgminer.service" ]; then
 	#	if grep -q minerstat "/etc/profile"; then
     #    	echo "cron installed"
@@ -268,7 +273,7 @@ if grep -q InnoMiner "/etc/issue"; then
     	else
     		echo "non exist for innosilicon"
     		echo "Installing cron as a system Service"
-    		
+
     		# INNO-CRON
     		# find / -name cgminer.service
 			#/etc/systemd/system/multi-user.target.wants/cgminer.service
@@ -281,12 +286,12 @@ if grep -q InnoMiner "/etc/issue"; then
 			chmod 777 minerstat.service
 			#systemctl enable minerstat
 			echo "Cron enabled"
-			
+
 			# safety cron
 			if [ -f "/etc/systemd/system/multi-user.target.wants/cgminer.service" ]; then
 				if grep -q minerstat "/etc/systemd/system/multi-user.target.wants/cgminer.service"; then
         				echo "safety cron here"
-    				else
+    		else
         				echo "need to install safety cron"
 
 					cd /usr/lib/systemd/system/
@@ -297,13 +302,24 @@ if grep -q InnoMiner "/etc/issue"; then
 					systemctl enable cgminer
 					systemctl start cgminer
 
-    				fi
+    		fi
 			fi
 
+      if grep -q beat "/etc/systemd/system/multi-user.target.wants/cgminer.service"; then
+            echo "watchdog is here"
+      else
+            echo "installing watchdog"
+            cd /usr/lib/systemd/system/
+            sed -i '/PrivateTmp=no/a ExecStartPre=/bin/sh -c "screen -A -m -d -S watchdog sh /config/minerstat/inno_beat.sh"' cgminer.service
+            rm /etc/systemd/system/multi-user.target.wants/cgminer.service
+  					systemctl enable cgminer
+  					systemctl start cgminer
+      fi
+
 			#systemctl start minerstat
-			screen -A -m -d -S minerstat sh /config/minerstat/minerstat.sh
+			#screen -A -m -d -S minerstat sh /config/minerstat/minerstat.sh
 			nohup sync && sleep 200 && mount -o remount,rw  / &
-    		
+
     	fi
 	fi
 fi
@@ -333,7 +349,7 @@ if [ -f "/etc/cgminer.conf" ]; then
 			#echo "rm /etc/minerstat/log.txt && echo 'starting minerstat..' >> /etc/minerstat/log.txt" >> /etc/init.d/S99startup
 			echo "sleep 60 && nohup /bin/sh /etc/minerstat/minerstat.sh &" >> /etc/init.d/S99startup
 			echo "* * * * * /bin/sh /etc/minerstat/spond_beat.sh" >> /etc/cron.d/crontabs/root
-			echo "* * * * * /bin/sh /etc/minerstat/spond_beat.sh" >> /etc/cron.d/crontabs.4560 
+			echo "* * * * * /bin/sh /etc/minerstat/spond_beat.sh" >> /etc/cron.d/crontabs.4560
 		fi
 fi
 
@@ -388,6 +404,7 @@ if [ -f "/etc/cgminer.conf" ]; then
 		screen -A -m -d -S minerstat ./minerstat.sh $4
 		screen -list
 		nohup sync > /dev/null 2>&1 &
+    screen -A -m -d -S watchdog sh /config/minerstat/inno_beat.sh
 	else
 		echo "Notice => You can check the process running with: jobs -l"
 		nohup /bin/sh /etc/minerstat/minerstat.sh &
