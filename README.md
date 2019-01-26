@@ -35,6 +35,7 @@ Work in progress for more ASIC support.
 - [3 steps to set up ASIC Hub](https://medium.com/@minerstat/3-steps-to-set-up-asic-hub-a39a9803f0f2)
 - [Antminer monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-20-antminer-monitoring-5882f7e362d9)
 - [Innosilicon monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-23-innosilicon-monitoring-a667aff06a76)
+- [Baikal monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-27-baikal-monitoring-2e0d7284a90d)
 
 ## Installation & Update on Antminer, Innosilicon, Dayun, Baikal ASIC Miner
 
