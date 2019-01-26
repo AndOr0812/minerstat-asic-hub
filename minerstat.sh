@@ -107,7 +107,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 break
                 ;;
 	    
-	    oolies)
+	    spondoolies)
                 fetch
                 break
                 ;;
