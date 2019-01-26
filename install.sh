@@ -46,7 +46,7 @@ fi
 #############################
 # TESTING CURL
 echo "-*-*-*-*-*-*-*-*-*-*-*-*"
-rm error.log &> /dev/null
+rm error.log 
 curl 2> error.log
 
 if grep -q libcurl.so.5 "error.log"; then
@@ -66,6 +66,9 @@ rm /etc/systemd/system/multi-user.target.wants/minerstat.service
 # TESTING NC
 echo "-*-*-*-*-*-*-*-*-*-*-*-*"
 rm error.log
+
+sleep 1
+
 nc 2> error.log
 
 sleep 1
@@ -73,14 +76,13 @@ sleep 1
 if grep -q found "error.log"; then
     echo "NC PATCH APPLIED !"
     # INSTALL NC
-    cd /bin
+    	cd /bin
 	curl -O https://busybox.net/downloads/binaries/1.21.1/busybox-armv7l --insecure # change this to GITHUB
 	chmod 777 busybox-armv7l
 	busybox-armv7l --install /bin
 else
     echo "NC IS OK!"
 fi
-
 
 #############################
 # DETECT-REMOVE INVALID CONFIGS
@@ -89,11 +91,11 @@ TOKEN="null"
 ASIC="null"
 
 if [ -f "/etc/init.d/cgminer.sh" ]; then
-    rm "/config/bmminer.conf" &> /dev/null
+    rm "/config/bmminer.conf" 
 fi
 
 if [ -f "/etc/init.d/bmminer.sh" ]; then
-    rm "/config/cgminer.conf" &> /dev/null
+    rm "/config/cgminer.conf" 
 fi
 
 #############################
