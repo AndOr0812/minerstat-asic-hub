@@ -112,7 +112,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 break
                 ;;
 
-	          silicon)
+	          innosilicon)
                 fetch
                 break
                 ;;
