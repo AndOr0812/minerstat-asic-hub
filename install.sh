@@ -43,6 +43,14 @@ if [ -f "/etc/cgminer.conf" ]; then
 	rm -rf /etc/minerstat
 fi
 
+if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+  # Screen and curl were removed
+  # https://openwrt.org/packages/start
+  opkg update
+  opkg install screen
+  opkg install curl
+fi
+
 #############################
 # TESTING CURL
 echo "-*-*-*-*-*-*-*-*-*-*-*-*"
