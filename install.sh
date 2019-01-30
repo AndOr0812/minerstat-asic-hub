@@ -160,6 +160,13 @@ if grep -q InnoMiner "/etc/issue"; then
 	fi
 fi
 
+if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+    MINER="cgminer"
+    CONFIG_FILE="cgminer.conf"
+    ASIC="braiinsos"
+    CONFIG_PATH="/etc"
+fi
+
 cd $CONFIG_PATH
 
 #############################
@@ -225,6 +232,7 @@ rm spond_beat.sh
 rm baikal_beat.sh
 rm inno_beat.sh
 rm antminer_beat.sh
+rm braiins_beat.sh
 
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
@@ -234,6 +242,7 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/baikal_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/antminer_beat.sh
+curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/braiins_beat.sh
 
 
 chmod 777 runmeonboot
@@ -243,6 +252,7 @@ chmod 777 spond_beat.sh
 chmod 777 baikal_beat.sh
 chmod 777 inno_beat.sh
 chmod 777 antminer_beat.sh
+chmod 777 braiins_beat.sh
 #ln -s runmeonboot /etc/rc.d/
 
 dir=$(pwd)
@@ -376,6 +386,22 @@ if [ -f "/opt/scripta/etc/miner.conf" ]; then
 		fi
 fi
 
+############################
+# Braiins CRONTAB
+if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+  if grep -q beat "/etc/crontabs/root"; then
+    echo "CRON IS OK!"
+  else
+    echo "INSTALLING CRON FOR BRAIINSOS"
+    # /etc/crontabs
+    # -> cron.update
+    # -> root
+    echo "* * * * * /bin/sh /etc/minerstat/braiins_beat.sh" > /etc/crontabs/cron.update
+    echo "* * * * * /bin/sh /etc/minerstat/braiins_beat.sh" > /etc/crontabs/root
+  fi
+fi
+
+
 #echo -n > /etc/init.d/minerstat
 #chmod 777 /etc/init.d/minerstat
 #echo "#!/bin/sh" >> /etc/init.d/minerstat
@@ -428,6 +454,7 @@ else
 	echo "Notice => You can check the process running with: screen -list"
 	screen -A -m -d -S minerstat ./minerstat.sh $4
   screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh
+  nohup /bin/sh /etc/minerstat/braiins_beat.sh & # Start braiinsOS
 	screen -list
 	nohup sync > /dev/null 2>&1 &
 fi

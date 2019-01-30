@@ -112,12 +112,15 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 break
                 ;;
 
-	    silicon)
+	          silicon)
                 fetch
                 break
                 ;;
-
-	    spondoolies)
+	          spondoolies)
+                fetch
+                break
+                ;;
+            braiinsos)
                 fetch
                 break
                 ;;
@@ -178,33 +181,48 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 			fi
 		fi
 	fi
-	# Spondoolies
-	if [ -f "/etc/cgminer.conf" ]; then
-		echo "FOUND SPONDOOLIES"
-		MINER="cgminer"
-        	CONFIG_FILE="cgminer.conf"
-        	ASIC="spondoolies"
-		CONFIG_PATH="/etc"
-		FOUND="Y"
-		# CHECK PROTECTOR HEALTH
-		CHECKHEALTH=$(ps | grep -c spond_beat.sh)
-		if [ "$CHECKHEALTH" != "1" ]
-    		then
-			echo ""
-		else
-			nohup /bin/sh /etc/minerstat/spond_beat.sh &
-		fi
-            	check
-	fi
+
+
+  if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+      MINER="cgminer"
+      CONFIG_FILE="cgminer.conf"
+      ASIC="braiinsos"
+      CONFIG_PATH="/etc"
+      FOUND="Y"
+      check
+  else
+    # Spondoolies
+    if [ -f "/etc/cgminer.conf" ]; then
+      echo "FOUND SPONDOOLIES"
+      MINER="cgminer"
+            CONFIG_FILE="cgminer.conf"
+            ASIC="spondoolies"
+      CONFIG_PATH="/etc"
+      FOUND="Y"
+      # CHECK PROTECTOR HEALTH
+      CHECKHEALTH=$(ps | grep -c spond_beat.sh)
+      if [ "$CHECKHEALTH" != "1" ]
+          then
+        echo ""
+      else
+        nohup /bin/sh /etc/minerstat/spond_beat.sh &
+      fi
+                check
+    fi
+  fi
+
 	# BAIKAL
         if [ -d "/opt/scripta/etc" ]; then
             ASIC="baikal"
             MINER="sgminer"
             CONFIG_PATH="/opt/scripta/etc"
-	    CONFIG_FILE="miner.conf"
+	          CONFIG_FILE="miner.conf"
             FOUND="Y"
             check
         fi
+        # BRAIINS OS
+
+
         # DRAGONMINT
         # NOT SURE ?
 
@@ -293,9 +311,15 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 	if [ -f "/opt/scripta/etc/miner.conf" ]; then
 		MODEL="BAIKAL"
 		TOKEN=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            	WORKER=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+    WORKER=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/opt/scripta/etc"
 	fi
+  if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+    MODEL="BRAIINSOS"
+    TOKEN=$(cat "/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+    WORKER=$(cat "/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+    CONFIG_PATH="/etc"
+  fi
         POSTDATA=$(curl -s --insecure --header "Content-type: application/x-www-form-urlencoded" --request POST --data "token=$TOKEN" --data "worker=$WORKER" --data "ip=$LOCALIP" --data "data=$RESPONSE" https://api.minerstat.com/v2/get_asic)
         remoteCMD
     }
