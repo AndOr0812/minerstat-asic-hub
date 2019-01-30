@@ -220,6 +220,7 @@ rm spond_start.sh &> /dev/null
 rm spond_beat.sh &> /dev/null
 rm baikal_beat.sh &> /dev/null
 rm inno_beat.sh &> /dev/null
+rm antminer_beat.sh &> /dev/null
 
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
@@ -228,6 +229,7 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/spond_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/baikal_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
+curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/antminer_beat.sh
 
 
 chmod 777 runmeonboot &> /dev/null
@@ -236,6 +238,7 @@ chmod 777 spond_start.sh &> /dev/null
 chmod 777 spond_beat.sh &> /dev/null
 chmod 777 baikal_beat.sh &> /dev/null
 chmod 777 inno_beat.sh &> /dev/null
+chmod 777 antminer_beat.sh &> /dev/null
 #ln -s runmeonboot /etc/rc.d/
 
 dir=$(pwd)
@@ -253,6 +256,13 @@ if [ -f "/config/network.conf" ]; then
     else
         echo "cron not installed, installing"
         echo "screen -A -m -d -S minerstat sh /config/minerstat/minerstat.sh" >> /config/network.conf
+        #echo "screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh" >> /config/network.conf
+    fi
+    if grep -q beat "/config/network.conf"; then
+        echo "cron installed"
+    else
+        echo "cron not installed, installing"
+        echo "screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh" >> /config/network.conf
     fi
 fi
 

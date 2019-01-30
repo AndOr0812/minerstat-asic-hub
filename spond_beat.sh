@@ -11,7 +11,7 @@ check() {
   else
   	nohup /bin/sh /etc/minerstat/minerstat.sh &
   fi
-    
+
   #sleep 10
   #check
 

@@ -16,16 +16,16 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     fi
 
     sleep 10
-    
+
     echo "-------- WAITING FOR CONNECTION -----------------"
 
     while ! ping minerstat.farm -w 1 | grep "0%"; do
         sleep 1
     done
-           
+
     # Remount filesystem
     mount -o remount,rw  / #remount filesystem
-     
+
     #############################
     # TESTING NC
     echo "-*-*-*-*-*-*-*-*-*-*-*-*"
@@ -42,7 +42,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     else
     	echo "NC IS OK!"
     fi
-    
+
     rm error.log &> /dev/null
     cat minerstat.txt 2> error.log
 
@@ -101,12 +101,12 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 fetch
                 break
                 ;;
-            
+
 	    silicon)
                 fetch
                 break
                 ;;
-	    
+
 	    spondoolies)
                 fetch
                 break
@@ -155,7 +155,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             CONFIG_PATH="/var/www/html/resources"
             FOUND="Y"
             check
-        fi	
+        fi
 	# Inno
 	if grep -q InnoMiner "/etc/issue"; then
 		if [ -d "/config" ]; then
@@ -184,7 +184,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 		else
 			nohup /bin/sh /etc/minerstat/spond_beat.sh &
 		fi
-            	check		
+            	check
 	fi
 	# BAIKAL
         if [ -d "/opt/scripta/etc" ]; then
@@ -194,7 +194,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 	    CONFIG_FILE="miner.conf"
             FOUND="Y"
             check
-        fi	
+        fi
         # DRAGONMINT
         # NOT SURE ?
 
@@ -204,7 +204,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             TOKEN=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             WORKER=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
         fi
-		
+
         if [ $FOUND == "null" ]; then
             FOUND="err"
             echo "ERROR => This machine is not supported."
@@ -217,7 +217,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     # 3) DETECT IS OK, GET DATA FROM TCP
     fetch() {
-    	
+
 	if [ -f "/etc/cgminer.conf" ]; then
 		if grep -q InnoMiner "/etc/issue"; then
 			echo ""
@@ -228,10 +228,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 				echo ""
 			else
 				nohup /bin/sh /etc/minerstat/spond_beat.sh &
-			fi	
-		fi  		
+			fi
+		fi
 	fi
-    
+
         #echo "Detected => $ASIC"
             QUERY=$(echo '{"command": "stats+summary+pools"}' | nc 127.0.0.1 4028)
             RESPONSE="""$QUERY "
@@ -242,7 +242,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 	    	QUERY=$(echo '{"command": "stats+summary+pools"}' | nc 127.0.0.1 4028)
             	RESPONSE="""$QUERY "
 		post
-	    fi            
+	    fi
     }
 
     # 4) SEND DATA TO THE SERVER
@@ -272,13 +272,13 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/config"
-		fi	
+		fi
 		if [ -f "/config/bmminer.conf" ]; then
 		MODEL="ANTMINER"
 		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/config"
-		fi	
+		fi
 	fi
 	if [ -f "/opt/scripta/etc/miner.conf" ]; then
 		MODEL="BAIKAL"
@@ -296,12 +296,12 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         # AutoUpdate
         # 1 Round is 45sec, X + 45
         # 12 hour (60 x 60) x 12 = 43,200
-	
+
 	if [ "$MAINT" != "1" ]; then
 		MAINT="1"
 		maintenance
 	fi
-		
+
         SYNC_ROUND=$(($SYNC_ROUND + $SYNC_MAX))
 
 	if [ -d "/var/www/html/resources" ]; then
@@ -309,14 +309,14 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 	fi
 
         if [ "$SYNC_ROUND" -gt "3000" ]; then
-	
+
 	    #screen -S ms-run -X quit
             #screen -wipe
 	    #SOFTWARE=$(cd "$CONFIG_PATH/minerstat"; screen -A -m -d -S update sh update.sh $TOKEN $WORKER noupload forcestart)
-            
+
 	    echo "Software update in progress"
 	    #echo "$SOFTWARE"
-	    
+
 	    SYNC_ROUND=0
 	    SYNC_MEMORY=$(sync)
         fi
@@ -328,16 +328,16 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             echo "Remote command => $POSTDATA"
         fi
         # echo $RESPONSE
-	
+
 	#READ=$(cat "/$CONFIG_PATH/$CONFIG_FILE")
 		# Update config on the 3th sync
 			if [ "$SYNC_ROUND" != "135" ]; then
 				echo ""
-			else 
+			else
 				rm "$CONFIG_PATH/server.json"
 				POSTIT=$(cd $CONFIG_PATH; wget -O server.json "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC")
 				if [ -s "$CONFIG_PATH/server.json" ]
-	   			then 
+	   			then
    					#echo " file exists and is not empty "
 					rm "/$CONFIG_PATH/$CONFIG_FILE"
 					cp -f "/$CONFIG_PATH/server.json" "/$CONFIG_PATH/$CONFIG_FILE"
@@ -348,7 +348,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
   				echo " file does not exist, or is empty "
 			fi
 			fi
-				
+
         if [ "$(printf '%s' "$POSTDATA")" == "CONFIG" ]; then
             if [ $CONFIG_FILE != "null" ]; then
                 cd $CONFIG_PATH #ENTER CONFIG DIRECTORY
@@ -380,19 +380,25 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         if [ "$(printf '%s' "$POSTDATA")" == "REBOOT" ]; then
             sleep 3
             echo "REBOOTING MINER..."
+            # SPONDS need reboot -f
+            if ! grep -q InnoMiner "/etc/issue"; then
+        		    if [ -f "/etc/cgminer.conf" ]; then
+                  reboot -f
+                fi
+            fi
+            # Sponds end
             /sbin/shutdown -r now
             /sbin/reboot
-	    reboot -f
         fi
         if [ "$(printf '%s' "$POSTDATA")" == "SHUTDOWN" ]; then
             sleep 2
             echo "SHUTTING DOWN..."
             /sbin/shutdown -h now
         fi
-	
-	sleep 45
+
+	      sleep 40
         check
-	
+
     }
 
     #############################
@@ -413,8 +419,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
             # SET CONFIG FILE WRITEABLE
             chmod 777 "/$CONFIG_PATH/$CONFIG_FILE"
-	   	
-	    
+
+
             # IF THERES SOME API ISSUE THE ANTMINER WILL REBOOT OR RESTART ITSELF
             # NO FORCED REBOOT REQUIRED AFTER CONFIG EDIT.
             # BUT THESE CHANGES CAN'T BE SKIPPER OR UNLESS THE MACHINE BECOME UNSTABLE.
