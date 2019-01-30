@@ -2,6 +2,8 @@
 
 # CURRENTLY ONLY USED FOR SPOND TO MAINTAIN UPTIME AND STABILITY
 
+check() {
+
 screen -wipe
 
 sleep 1
@@ -40,3 +42,10 @@ fi
 if screen -list | grep -q "ms-run" && screen -list | grep -q "minerstat"; then
   echo "All fine"
 fi
+
+sleep 30
+check
+
+}
+
+check

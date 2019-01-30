@@ -427,6 +427,7 @@ if [ -f "/etc/cgminer.conf" ]; then
 else
 	echo "Notice => You can check the process running with: screen -list"
 	screen -A -m -d -S minerstat ./minerstat.sh $4
+  screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh
 	screen -list
 	nohup sync > /dev/null 2>&1 &
 fi
