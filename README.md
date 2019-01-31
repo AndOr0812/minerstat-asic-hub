@@ -21,6 +21,7 @@ Monitoring and management client installed on the ASIC. The software makes possi
 * Baikal N
 * Baikal N240
 * Baikal X
+* Braiins OS (Antminer Firmware)
 * Innosilicon A9 ZMaster
 * Innosilicon D9 DecredMaster
 * Innosilicon S11 SiaMaster
@@ -103,14 +104,14 @@ cd /tmp && wget -O firmware.sh https://raw.githubusercontent.com/minerstat/miner
 cd /tmp && wget -O uninstall.sh http://static.minerstat.farm/github/uninstall.sh && chmod 777 *.sh && sh uninstall.sh
 ```
 
-## 
+##
 
 ***© minerstat OÜ*** in 2018
 
 
-***Contact:*** app [ @ ] minerstat.com 
+***Contact:*** app [ @ ] minerstat.com
 
 
 ***Mail:*** Sepapaja tn 6, Lasnamäe district, Tallinn city, Harju county, 15551, Estonia
 
-## 
+##

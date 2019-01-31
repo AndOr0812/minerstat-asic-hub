@@ -239,7 +239,7 @@ rm spond_start.sh
 rm spond_beat.sh
 rm baikal_beat.sh
 rm inno_beat.sh
-rm antminer_beat.sh
+rm bitmain_beat.sh
 rm braiins_beat.sh
 
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
@@ -249,7 +249,7 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/spond_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/baikal_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
-curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/antminer_beat.sh
+curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bitmain_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/braiins_beat.sh
 
 
@@ -259,7 +259,7 @@ chmod 777 spond_start.sh
 chmod 777 spond_beat.sh
 chmod 777 baikal_beat.sh
 chmod 777 inno_beat.sh
-chmod 777 antminer_beat.sh
+chmod 777 bitmain_beat.sh
 chmod 777 braiins_beat.sh
 #ln -s runmeonboot /etc/rc.d/
 
@@ -278,13 +278,13 @@ if [ -f "/config/network.conf" ]; then
     else
         echo "cron not installed, installing"
         echo "screen -A -m -d -S minerstat sh /config/minerstat/minerstat.sh" >> /config/network.conf
-        #echo "screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh" >> /config/network.conf
+        #echo "screen -A -m -d -S minerstat-secure sh /config/minerstat/bitmain_beat.sh" >> /config/network.conf
     fi
-    if grep -q beat "/config/network.conf"; then
+    if grep -q secure "/config/network.conf"; then
         echo "cron installed"
     else
         echo "cron not installed, installing"
-        echo "screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh" >> /config/network.conf
+        echo "screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh" >> /config/network.conf
     fi
 fi
 
@@ -467,7 +467,7 @@ if [ -f "/etc/cgminer.conf" ]; then
 else
 	echo "Notice => You can check the process running with: screen -list"
 	screen -A -m -d -S minerstat ./minerstat.sh $4
-  screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh
+  screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh
 	screen -list
 	nohup sync > /dev/null 2>&1 &
 fi
