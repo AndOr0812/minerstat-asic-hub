@@ -404,7 +404,9 @@ if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
     # /etc/crontabs
     # -> cron.update
     # -> root
-    echo "/bin/sh /etc/minerstat/braiins_beat.sh" > /etc/init.d/log
+    echo "" > /etc/init.d/log
+    echo "sleep 30" >> /etc/init.d/log
+    echo "/bin/sh /etc/minerstat/braiins_beat.sh" >> /etc/init.d/log
   fi
 fi
 
@@ -453,15 +455,19 @@ if [ -f "/etc/cgminer.conf" ]; then
 		nohup sync > /dev/null 2>&1 &
     screen -A -m -d -S watchdog sh /config/minerstat/inno_beat.sh
 	else
-		echo "Notice => You can check the process running with: jobs -l"
-		nohup /bin/sh /etc/minerstat/minerstat.sh &
-		jobs -l
+    if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+      /bin/sh /etc/minerstat/braiins_beat.sh # Start braiinsOS
+      screen -list
+    else
+      echo "Notice => You can check the process running with: jobs -l"
+      nohup /bin/sh /etc/minerstat/minerstat.sh &
+      jobs -l
+    fi
 	fi
 else
 	echo "Notice => You can check the process running with: screen -list"
 	screen -A -m -d -S minerstat ./minerstat.sh $4
   screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh
-  /bin/sh /etc/minerstat/braiins_beat.sh # Start braiinsOS
 	screen -list
 	nohup sync > /dev/null 2>&1 &
 fi
