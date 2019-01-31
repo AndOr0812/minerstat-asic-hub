@@ -397,15 +397,14 @@ fi
 ############################
 # Braiins CRONTAB
 if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
-  if grep -q beat "/etc/crontabs/root"; then
+  if grep -q beat "/etc/init.d/log"; then
     echo "CRON IS OK!"
   else
     echo "INSTALLING CRON FOR BRAIINSOS"
     # /etc/crontabs
     # -> cron.update
     # -> root
-    echo "* * * * * /bin/sh /etc/minerstat/braiins_beat.sh" > /etc/crontabs/cron.update
-    echo "* * * * * /bin/sh /etc/minerstat/braiins_beat.sh" > /etc/crontabs/root
+    echo "/bin/sh /etc/minerstat/braiins_beat.sh" > /etc/init.d/log
   fi
 fi
 
@@ -462,7 +461,7 @@ else
 	echo "Notice => You can check the process running with: screen -list"
 	screen -A -m -d -S minerstat ./minerstat.sh $4
   screen -A -m -d -S minerstat-secure sh /config/minerstat/antminer_beat.sh
-  nohup /bin/sh /etc/minerstat/braiins_beat.sh & # Start braiinsOS
+  /bin/sh /etc/minerstat/braiins_beat.sh # Start braiinsOS
 	screen -list
 	nohup sync > /dev/null 2>&1 &
 fi

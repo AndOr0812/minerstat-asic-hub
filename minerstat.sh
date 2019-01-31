@@ -250,6 +250,9 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 		if grep -q InnoMiner "/etc/issue"; then
 			echo ""
 		else
+      if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+        echo ""
+      else
 			CHECKHEALTH=$(ps | grep -c spond_beat)
 			if [ "$CHECKHEALTH" != "1" ]
     			then
@@ -258,6 +261,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 				nohup /bin/sh /etc/minerstat/spond_beat.sh &
 			fi
 		fi
+  fi
 	fi
 
         #echo "Detected => $ASIC"
