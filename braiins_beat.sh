@@ -15,7 +15,7 @@ if ! screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; th
   screen -S ms-run -X quit # kill running process
   screen -wipe
   screen -A -m -d -S minerstat sh /etc/minerstat/minerstat.sh
-  exit
+  #exit
 fi
 
 # ONLY MS-RUN RUN MINERSTAT
@@ -25,7 +25,7 @@ if screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
   screen -S ms-run -X quit # kill running process
   screen -wipe
   screen -A -m -d -S minerstat sh /etc/minerstat/minerstat.sh
-  exit
+  #exit
 fi
 
 # ONLY MINERSTAT
@@ -35,7 +35,7 @@ if screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
   screen -S ms-run -X quit # kill running process
   screen -wipe
   screen -A -m -d -S minerstat sh /etc/minerstat/minerstat.sh
-  exit
+  #exit
 fi
 
 # ALL FINE
