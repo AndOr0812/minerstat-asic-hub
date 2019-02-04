@@ -39,9 +39,9 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     	echo "NC PATCH APPLIED !"
     	# INSTALL NC
     	cd /bin
-	curl -O https://busybox.net/downloads/binaries/1.21.1/busybox-armv7l --insecure # change this to GITHUB
-	chmod 777 busybox-armv7l
-	busybox-armv7l --install /bin
+	    curl -O https://busybox.net/downloads/binaries/1.21.1/busybox-armv7l --insecure # change this to GITHUB
+	    chmod 777 busybox-armv7l
+	    busybox-armv7l --install /bin
     else
     	echo "NC IS OK!"
     fi
@@ -434,6 +434,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             /sbin/shutdown -h now
         fi
 
+        # Wait after new sync round
 	      sleep 40
         check
 
@@ -477,13 +478,19 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     #############################
     # SYNC LOOP
+    echo "Staring the Hub.."
+
+    # First trigger
+    sleep 20
     check
+
     #aupdate
-    while true
-    do
-        sleep 45
-        check
-    done
+
+    #while true
+    #do
+    #    sleep 45
+    #    check
+    #done
 
 else
     echo "ERROR => Minerstat is already running! See: screen -x minerstat"
