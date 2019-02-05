@@ -43,8 +43,8 @@ if screen -list | grep -q "ms-run" && screen -list | grep -q "minerstat"; then
   echo "All fine"
 fi
 
-sleep 30
-check
+#sleep 30
+#check
 
 }
 

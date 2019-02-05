@@ -21,7 +21,7 @@ Monitoring and management client installed on the ASIC. The software makes possi
 * Baikal N
 * Baikal N240
 * Baikal X
-* Braiins OS (Antminer Firmware) [11/2018 firmware only, 19' support coming shortly]
+* Braiins OS - Cobalt (Antminer Firmware) [01/2019]
 * Innosilicon A9 ZMaster
 * Innosilicon D9 DecredMaster
 * Innosilicon S11 SiaMaster

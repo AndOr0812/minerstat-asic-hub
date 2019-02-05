@@ -397,16 +397,17 @@ fi
 ############################
 # Braiins CRONTAB
 if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
-  if grep -q beat "/etc/init.d/log"; then
+  if grep -q beat "/etc/crontabs/root"; then
     echo "CRON IS OK!"
   else
     echo "INSTALLING CRON FOR BRAIINSOS"
     # /etc/crontabs
     # -> cron.update
     # -> root
-    echo "" > /etc/init.d/log
-    echo "sleep 30" >> /etc/init.d/log
-    echo "/bin/sh /etc/minerstat/braiins_beat.sh" >> /etc/init.d/log
+
+    echo "" > /etc/crontabs/root
+    echo "* * * * * /bin/sh /etc/minerstat/braiins_beat.sh" >> /etc/crontabs/root
+    service cron restart
   fi
 fi
 
