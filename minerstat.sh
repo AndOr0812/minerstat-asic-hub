@@ -12,7 +12,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     if ! screen -list | grep -q "ms-run"; then
     	# Fake Process, Boot & Double instance protection
-    	screen -A -m -d -S ms-run sleep 365d
+    	screen -A -m -d -S ms-run sleep 3h
     fi
 
     sleep 10
