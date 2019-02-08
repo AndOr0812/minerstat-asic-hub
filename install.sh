@@ -67,7 +67,7 @@ fi
 
 #############################
 # TESTING CPU
-cat /proc/cpuinfo
+#cat /proc/cpuinfo
 rm /etc/systemd/system/multi-user.target.wants/minerstat.service
 
 #############################
