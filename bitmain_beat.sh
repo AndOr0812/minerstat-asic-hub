@@ -1,4 +1,5 @@
 #!/bin/sh
+exec 2>/dev/null
 
 # CURRENTLY ONLY USED FOR SPOND TO MAINTAIN UPTIME AND STABILITY
 
@@ -31,9 +32,9 @@ fi
 # ONLY MINERSTAT NO MS-RUN
 if ! screen -list | grep -q "ms-run" && screen -list | grep -q "minerstat"; then
   #echo "Frozen, restart"
-  screen -S minerstat -X quit &> /dev/null
-  screen -S ms-run -X quit &> /dev/null
-  screen -wipe &> /dev/null
+  screen -S minerstat -X quit
+  screen -S ms-run -X quit
+  screen -wipe
   screen -A -m -d -S minerstat sh /config/minerstat/minerstat.sh
   #exit
 fi
