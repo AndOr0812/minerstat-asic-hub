@@ -37,6 +37,8 @@ Work in progress for more ASIC support.
 - [Antminer monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-20-antminer-monitoring-5882f7e362d9)
 - [Innosilicon monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-23-innosilicon-monitoring-a667aff06a76)
 - [Baikal monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-27-baikal-monitoring-2e0d7284a90d)
+- [Spondoolies monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-29-spondoolies-monitoring-aec76f6f97a0)
+- [Dayun monitoring](https://medium.com/@minerstat/minerstat-mining-tutorial-30-dayun-monitoring-8144a384f917)
 
 ## Installation & Update on Antminer, Innosilicon, Dayun, Baikal ASIC Miner
 
