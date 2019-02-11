@@ -152,7 +152,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             fi
             FOUND="Y"
 	    # CHECK PROTECTOR HEALTH
-	    CHECKHEALTH=$(ps | grep -c bitmain.sh)
+	    CHECKHEALTH=$(ps | grep -c bitmain)
       	    if [ "$CHECKHEALTH" != "1" ]
             then
               echo ""
