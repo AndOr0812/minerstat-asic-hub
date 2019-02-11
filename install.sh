@@ -1,4 +1,5 @@
 #!/bin/sh
+exec 2>/dev/null
 mount -o remount,rw  / #remount filesystem
 
 echo "--------- MINERSTAT ASIC HUB (INSTALL) -----------"
