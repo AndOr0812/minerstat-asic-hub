@@ -1,4 +1,5 @@
 #!/bin/sh
+exec 2>/dev/null
 
 sleep 1
 
@@ -111,7 +112,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 fetch
                 break
                 ;;
-
 	    innosilicon)
                 fetch
                 break
@@ -151,6 +151,14 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 MINER="bmminer"
             fi
             FOUND="Y"
+	    # CHECK PROTECTOR HEALTH
+	    CHECKHEALTH=$(ps | grep -c bitmain.sh)
+      	    if [ "$CHECKHEALTH" != "1" ]
+            then
+              echo ""
+            else
+             screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh
+            fi
             check
         fi
         # INNOSILICON
@@ -222,10 +230,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         fi
         # BRAIINS OS
 
-
-        # DRAGONMINT
-        # NOT SURE ?
-
         # MINER
         if [ $TOKEN == "null" ]; then
             #MODEL=$(sed -n 2p /usr/bin/compile_time)
@@ -294,10 +298,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 		CONFIG_PATH="/etc"
 	else
 		if [ -f "/etc/cgminer.conf" ]; then
-			MODEL="SPONDOOLIES"
-			TOKEN=$(cat "/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            		WORKER=$(cat "/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-			CONFIG_PATH="/etc"
+		MODEL="SPONDOOLIES"
+		TOKEN=$(cat "/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+            	WORKER=$(cat "/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+		CONFIG_PATH="/etc"
 		fi
 		if [ -f "/config/cgminer.conf" ]; then
 		MODEL="ANTMINER"
@@ -331,36 +335,11 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     # 5) CHECK SERVER RESPOSNE FOR POSSIBLE PENDING REMOTE COMMANDS
     remoteCMD() {
 
-        # AutoUpdate
-        # 1 Round is 45sec, X + 45
-        # 12 hour (60 x 60) x 12 = 43,200
-
-	if [ "$MAINT" != "1" ]; then
-		MAINT="1"
-		maintenance
-	fi
-
         SYNC_ROUND=$(($SYNC_ROUND + $SYNC_MAX))
 
 	if [ -d "/var/www/html/resources" ]; then
 		SYNC_ROUND=0
 	fi
-
-        if [ "$SYNC_ROUND" -gt "3000" ]; then
-
-	    #screen -S ms-run -X quit
-            #screen -wipe
-	    #SOFTWARE=$(cd "$CONFIG_PATH/minerstat"; screen -A -m -d -S update sh update.sh $TOKEN $WORKER noupload forcestart)
-
-	    echo "Software update in progress"
-	    #echo "$SOFTWARE"
-
-	    SYNC_ROUND=0
-	    SYNC_MEMORY=$(sync)
-        fi
-
-        # DEBUG
-        #echo "API => Updated (Waiting for the next sync)"
 
         if [ "$(printf '%s' "$POSTDATA")" != "NULL" ]; then
             echo "Remote command => $POSTDATA"
@@ -440,57 +419,13 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     }
 
-    #############################
-    # MAINTAIN
-    # NOTICE: THIS iS ONLY RUN ON ASIC BOOT OR SOFTWARE START
-
-    maintenance() {
-        # ANTMINER
-        if [ -d "/config" ]; then
-            if [ -f "/config/cgminer.conf" ]; then
-                CONFIG_FILE="cgminer.conf"
-                CONFIG_PATH="/config"
-            fi
-            if [ -f "/config/bmminer.conf" ]; then
-                CONFIG_FILE="bmminer.conf"
-                CONFIG_PATH="/config"
-            fi
-
-            # SET CONFIG FILE WRITEABLE
-            chmod 777 "/$CONFIG_PATH/$CONFIG_FILE"
-
-
-            # IF THERES SOME API ISSUE THE ANTMINER WILL REBOOT OR RESTART ITSELF
-            # NO FORCED REBOOT REQUIRED AFTER CONFIG EDIT.
-            # BUT THESE CHANGES CAN'T BE SKIPPER OR UNLESS THE MACHINE BECOME UNSTABLE.
-
-        fi
-    }
-
-    #############################
-    # AUTO UPDATE
-    # Replace the script during runtime, this not applies until a reboot
-
-    aupdate() {
-        echo "auto update"
-	#curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
-    }
 
     #############################
     # SYNC LOOP
-    echo "Staring the Hub.."
-
-    # First trigger
+    
+    echo "Staring the hub.. (20 sec)"
     sleep 20
     check
-
-    #aupdate
-
-    while true
-    do
-        sleep 10800 # 3h
-        screen -S ms-run -X quit &> /dev/null
-    done
 
 else
     echo "ERROR => Minerstat is already running! See: screen -x minerstat"
