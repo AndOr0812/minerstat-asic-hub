@@ -112,11 +112,11 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 break
                 ;;
 
-	          innosilicon)
+	    innosilicon)
                 fetch
                 break
                 ;;
-	          spondoolies)
+	    spondoolies)
                 fetch
                 break
                 ;;
@@ -228,7 +228,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
         # MINER
         if [ $TOKEN == "null" ]; then
-            MODEL=$(sed -n 2p /usr/bin/compile_time)
+            #MODEL=$(sed -n 2p /usr/bin/compile_time)
             TOKEN=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             WORKER=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
         fi
@@ -435,7 +435,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         fi
 
         # Wait after new sync round
-	      sleep 40
+	sleep 40
         check
 
     }
@@ -486,11 +486,11 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     #aupdate
 
-    #while true
-    #do
-    #    sleep 45
-    #    check
-    #done
+    while true
+    do
+        sleep 10800 # 3h
+        screen -S ms-run -X quit &> /dev/null
+    done
 
 else
     echo "ERROR => Minerstat is already running! See: screen -x minerstat"
