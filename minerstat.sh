@@ -379,9 +379,17 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 sleep 6
                 # DEBUG
                 cat "$CONFIG_PATH/$CONFIG_FILE"
-                #else
-                #echo "CONFIG => Config request was blank."
-                #fi
+                sleep 3
+                echo "REBOOTING MINER..."
+            	# SPONDS need reboot -f
+            	if ! grep -q InnoMiner "/etc/issue"; then
+        	if [ -f "/etc/cgminer.conf" ]; then
+                	reboot -f
+                fi
+           	fi
+                # Sponds end
+           	/sbin/shutdown -r now
+            	/sbin/reboot
             fi
         fi
         if [ "$(printf '%s' "$POSTDATA")" == "RESTART" ]; then
