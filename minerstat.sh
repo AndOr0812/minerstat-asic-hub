@@ -224,7 +224,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             ASIC="baikal"
             MINER="sgminer"
             CONFIG_PATH="/opt/scripta/etc"
-	          CONFIG_FILE="miner.conf"
+	    CONFIG_FILE="miner.conf"
             FOUND="Y"
             check
         fi
@@ -290,37 +290,43 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 		MODEL="DAYUN"
 		TOKEN=$(cat "/var/www/html/resources/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/var/www/html/resources/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+		CONFIG_FILE="cgminer.config"
 	fi
 	if grep -q InnoMiner "/etc/issue"; then
 		MODEL="INNOSILICON"
 		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/etc"
+		CONFIG_FILE="cgminer.conf"
 	else
 		if [ -f "/etc/cgminer.conf" ]; then
 		MODEL="SPONDOOLIES"
 		TOKEN=$(cat "/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/etc"
+		CONFIG_FILE="cgminer.conf"
 		fi
 		if [ -f "/config/cgminer.conf" ]; then
 		MODEL="ANTMINER"
 		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/config"
+		CONFIG_FILE="cgminer.conf"
 		fi
 		if [ -f "/config/bmminer.conf" ]; then
 		MODEL="ANTMINER"
 		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/config"
+		CONFIG_FILE="bmminer.conf"
 		fi
 	fi
 	if [ -f "/opt/scripta/etc/miner.conf" ]; then
 		MODEL="BAIKAL"
 		TOKEN=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-    WORKER=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+    		WORKER=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/opt/scripta/etc"
+		CONFIG_FILE="miner.conf"
 	fi
   if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
     MODEL="BRAIINSOS"
