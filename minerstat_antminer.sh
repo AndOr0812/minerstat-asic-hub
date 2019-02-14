@@ -106,13 +106,9 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             FOUND="Y"
 	          # CHECK PROTECTOR HEALTH
 	          CHECKHEALTH=$(ps | grep -c bitmain)
-      	    if [ "$CHECKHEALTH" != "1" ]
-            then
-              echo ""
-            else
+      	    if [ "$CHECKHEALTH" == "1" ]; then
              screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh
             fi
-            check
         fi
 
         # MINER
@@ -183,22 +179,20 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         fi
         # echo $RESPONSE
 
-			if [ "$SYNC_ROUND" != "135" ]; then
-				echo ""
-			else
+			if [ "$SYNC_ROUND" == "135" ]; then
 				rm "$CONFIG_PATH/server.json"
 				POSTIT=$(cd $CONFIG_PATH; wget -O server.json "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC")
 				if [ -s "$CONFIG_PATH/server.json" ]
-	   			then
+	   		then
    					#echo " file exists and is not empty "
 					rm "/$CONFIG_PATH/$CONFIG_FILE"
 					cp -f "/$CONFIG_PATH/server.json" "/$CONFIG_PATH/$CONFIG_FILE"
 					chmod 777 "/$CONFIG_PATH/$CONFIG_FILE"
 					echo "CONFIG UPDATED FROM SERVER SIDE"
 					cat "/$CONFIG_PATH/$CONFIG_FILE"
-			else
+			    else
   				echo " file does not exist, or is empty "
-			fi
+			    fi
 			fi
 
         if [ "$(printf '%s' "$POSTDATA")" == "CONFIG" ]; then
@@ -246,7 +240,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     #############################
     # SYNC LOOP
 
-    echo "Staring the hub.. (20 sec)"
+    echo "Staring the hub.. (5 sec)"
     check
     sleep 5
 
