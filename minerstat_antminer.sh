@@ -13,7 +13,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     if ! screen -list | grep -q "ms-run"; then
     	# Fake Process, Boot & Double instance protection
-    	screen -A -m -d -S ms-run sleep 3h
+    	screen -A -m -d -S ms-run sleep 7h
     fi
 
     sleep 10
@@ -49,6 +49,9 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     CONFIG_FILE="null"
     SYNC_ROUND=0
     SYNC_MAX=45
+
+    LOCALIP="0.0.0.0"
+
 
     #############################
     # TESTING CURL
@@ -111,11 +114,23 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             fi
         fi
 
-        # MINER
-        if [ $TOKEN == "null" ]; then
-            #MODEL=$(sed -n 2p /usr/bin/compile_time)
-            TOKEN=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            WORKER=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+        LOCALIP=$(/sbin/ifconfig eth0 | grep Mask | sed 's/^.*addr/addr/' | cut -f1 -d" " | sed 's/[^0-9.]*//g')
+        LOCALIP="""$LOCALIP"
+
+        if [ -f "/config/cgminer.conf" ]; then
+        MODEL="ANTMINER"
+        TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+        WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+        CONFIG_PATH="/config"
+        CONFIG_FILE="cgminer.conf"
+        fi
+
+        if [ -f "/config/bmminer.conf" ]; then
+        MODEL="ANTMINER"
+        TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+        WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+        CONFIG_PATH="/config"
+        CONFIG_FILE="bmminer.conf"
         fi
 
         if [ $FOUND == "null" ]; then
@@ -130,41 +145,20 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     # 3) DETECT IS OK, GET DATA FROM TCP
     fetch() {
-        #echo "Detected => $ASIC"
             QUERY=$(echo '{"command": "stats+summary+pools"}' | nc 127.0.0.1 4028)
             RESPONSE="""$QUERY "
-	    if [ "$RESPONSE" != "timeout" ]; then
-	    	post
-	    else
-		sleep 3
-	    	QUERY=$(echo '{"command": "stats+summary+pools"}' | nc 127.0.0.1 4028)
-            	RESPONSE="""$QUERY "
-		post
-	    fi
+	           if [ "$RESPONSE" != "timeout" ]; then
+	    	         post
+	           else
+		             sleep 3
+	    	         QUERY=$(echo '{"command": "stats+summary+pools"}' | nc 127.0.0.1 4028)
+            	   RESPONSE="""$QUERY "
+		             post
+	           fi
     }
 
     # 4) SEND DATA TO THE SERVER
     post() {
-      #echo "{\"token\":\"$TOKEN\",\"worker\":\"$WORKER\",\"data\":\"$RESPONSE\"}"
-	 LOCALIP=$(/sbin/ifconfig eth0 | grep Mask | sed 's/^.*addr/addr/' | cut -f1 -d" " | sed 's/[^0-9.]*//g')
-	 LOCALIP="""$LOCALIP"
-
-		if [ -f "/config/cgminer.conf" ]; then
-		MODEL="ANTMINER"
-		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-    WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-		CONFIG_PATH="/config"
-		CONFIG_FILE="cgminer.conf"
-		fi
-
-		if [ -f "/config/bmminer.conf" ]; then
-		MODEL="ANTMINER"
-		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-    WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-		CONFIG_PATH="/config"
-		CONFIG_FILE="bmminer.conf"
-		fi
-
     POSTDATA=$(curl -s --insecure --header "Content-type: application/x-www-form-urlencoded" --request POST --data "token=$TOKEN" --data "worker=$WORKER" --data "ip=$LOCALIP" --data "data=$RESPONSE" https://api.minerstat.com/v2/get_asic)
     remoteCMD
     }
@@ -235,7 +229,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         fi
 
     }
-
 
     #############################
     # SYNC LOOP

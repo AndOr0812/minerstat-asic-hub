@@ -49,7 +49,7 @@ if screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
   #exit
 fi
 
-sleep 30
+sleep 60
 check
 
 }
