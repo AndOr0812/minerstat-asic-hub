@@ -115,16 +115,19 @@ if [ -d "/config" ]; then
     if [ -f "/config/cgminer.conf" ]; then
         MINER="cgminer"
         CONFIG_FILE="cgminer.conf"
+        ASIC="antminer"
     fi
     if [ -f "/config/bmminer.conf" ]; then
         MINER="bmminer"
         CONFIG_FILE="bmminer.conf"
+        ASIC="antminer"
     fi
 fi
 
 if [ -f "/config/bmminer.conf" ]; then
     MINER="bmminer"
     CONFIG_FILE="bmminer.conf"
+    ASIC="antminer"
 fi
 
 if [ -d "/var/www/html/resources" ]; then
@@ -206,7 +209,12 @@ MODEL=$(sed -n 2p /usr/bin/compile_time)
 # DOWNLOAD
 chmod 777 minerstat.sh
 rm minerstat.sh
-curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
+if [ "$ASIC" != "antminer"]; then
+  curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
+else
+  curl --insecure -H 'Cache-Control: no-cache' -s -o minerstat.sh https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat_antminer.sh
+fi
+
 chmod 777 minerstat.sh
 
 #############################

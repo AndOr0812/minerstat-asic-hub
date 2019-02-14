@@ -28,32 +28,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     mount -o remount,rw  / #remount filesystem
 
     #############################
-    # TESTING NC
-    echo "-*-*-*-*-*-*-*-*-*-*-*-*"
-    rm error.log
-
-    sleep 1
-
-    nc 2> error.log
-
-    if grep -q found "error.log"; then
-    	echo "NC PATCH APPLIED !"
-    	# INSTALL NC
-    	cd /bin
-	    curl -O https://busybox.net/downloads/binaries/1.21.1/busybox-armv7l --insecure # change this to GITHUB
-	    chmod 777 busybox-armv7l
-	    busybox-armv7l --install /bin
-    else
-    	echo "NC IS OK!"
-    fi
-
-    rm error.log
-
-    sleep 1
-
-    cat minerstat.txt 2> error.log
-
-    #############################
     # GLOBAL VARIBLES
 
     TOKEN="null"
@@ -82,7 +56,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     sleep 1
 
-
     curl 2> error.log
 
     if grep -q libcurl.so.5 "error.log"; then
@@ -103,26 +76,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         case $ASIC in
             antminer)
                 fetch
-                ;;
-            baikal)
-                fetch
-                break
-                ;;
-            dayun)
-                fetch
-                break
-                ;;
-	    innosilicon)
-                fetch
-                break
-                ;;
-	    spondoolies)
-                fetch
-                break
-                ;;
-            braiinsos)
-                fetch
-                break
                 ;;
             null)
                 #echo "INFO => Detecting ASIC Type"
@@ -151,8 +104,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 MINER="bmminer"
             fi
             FOUND="Y"
-	    # CHECK PROTECTOR HEALTH
-	    CHECKHEALTH=$(ps | grep -c bitmain)
+	          # CHECK PROTECTOR HEALTH
+	          CHECKHEALTH=$(ps | grep -c bitmain)
       	    if [ "$CHECKHEALTH" != "1" ]
             then
               echo ""
@@ -161,74 +114,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             fi
             check
         fi
-        # INNOSILICON
-        if [ -d "/home/www/conf" ]; then
-            ASIC="innosilicon"
-            MINER="cgminer"
-            CONFIG_PATH="/home/www/conf"
-            FOUND="Y"
-            check
-        fi
-	# DAYUN
-        if [ -d "/var/www/html/resources" ]; then
-            ASIC="dayun"
-            MINER="sgminer"
-            CONFIG_PATH="/var/www/html/resources"
-            FOUND="Y"
-            check
-        fi
-	# Inno
-	if grep -q InnoMiner "/etc/issue"; then
-		if [ -d "/config" ]; then
-			if [ -f "/etc/cgminer.conf" ]; then
-			MINER="cgminer"
-        		CONFIG_FILE="cgminer.conf"
-        		ASIC="innosilicon"
-			CONFIG_PATH="/etc"
-			check
-			fi
-		fi
-	fi
-
-
-  if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
-      MINER="cgminer"
-      CONFIG_FILE="cgminer.conf"
-      ASIC="braiinsos"
-      CONFIG_PATH="/etc"
-      FOUND="Y"
-      check
-  else
-    # Spondoolies
-    if [ -f "/etc/cgminer.conf" ]; then
-      echo "FOUND SPONDOOLIES"
-      MINER="cgminer"
-            CONFIG_FILE="cgminer.conf"
-            ASIC="spondoolies"
-      CONFIG_PATH="/etc"
-      FOUND="Y"
-      # CHECK PROTECTOR HEALTH
-      CHECKHEALTH=$(ps | grep -c spond_beat.sh)
-      if [ "$CHECKHEALTH" != "1" ]
-          then
-        echo ""
-      else
-        nohup /bin/sh /etc/minerstat/spond_beat.sh &
-      fi
-                check
-    fi
-  fi
-
-	# BAIKAL
-        if [ -d "/opt/scripta/etc" ]; then
-            ASIC="baikal"
-            MINER="sgminer"
-            CONFIG_PATH="/opt/scripta/etc"
-	    CONFIG_FILE="miner.conf"
-            FOUND="Y"
-            check
-        fi
-        # BRAIINS OS
 
         # MINER
         if [ $TOKEN == "null" ]; then
@@ -249,25 +134,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     # 3) DETECT IS OK, GET DATA FROM TCP
     fetch() {
-
-	if [ -f "/etc/cgminer.conf" ]; then
-		if grep -q InnoMiner "/etc/issue"; then
-			echo ""
-		else
-      if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
-        echo ""
-      else
-			CHECKHEALTH=$(ps | grep -c spond_beat)
-			if [ "$CHECKHEALTH" != "1" ]
-    			then
-				echo ""
-			else
-				nohup /bin/sh /etc/minerstat/spond_beat.sh &
-			fi
-		fi
-  fi
-	fi
-
         #echo "Detected => $ASIC"
             QUERY=$(echo '{"command": "stats+summary+pools"}' | nc 127.0.0.1 4028)
             RESPONSE="""$QUERY "
@@ -283,59 +149,28 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
     # 4) SEND DATA TO THE SERVER
     post() {
-        #echo "{\"token\":\"$TOKEN\",\"worker\":\"$WORKER\",\"data\":\"$RESPONSE\"}"
-	LOCALIP=$(/sbin/ifconfig eth0 | grep Mask | sed 's/^.*addr/addr/' | cut -f1 -d" " | sed 's/[^0-9.]*//g')
-	LOCALIP="""$LOCALIP"
-	if [ -d "/var/www/html/resources" ]; then
-		MODEL="DAYUN"
-		TOKEN=$(cat "/var/www/html/resources/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            	WORKER=$(cat "/var/www/html/resources/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-		CONFIG_FILE="cgminer.config"
-	fi
-	if grep -q InnoMiner "/etc/issue"; then
-		MODEL="INNOSILICON"
-		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-		CONFIG_PATH="/etc"
-		CONFIG_FILE="cgminer.conf"
-	else
-		if [ -f "/etc/cgminer.conf" ]; then
-		MODEL="SPONDOOLIES"
-		TOKEN=$(cat "/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            	WORKER=$(cat "/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-		CONFIG_PATH="/etc"
-		CONFIG_FILE="cgminer.conf"
-		fi
+      #echo "{\"token\":\"$TOKEN\",\"worker\":\"$WORKER\",\"data\":\"$RESPONSE\"}"
+	 LOCALIP=$(/sbin/ifconfig eth0 | grep Mask | sed 's/^.*addr/addr/' | cut -f1 -d" " | sed 's/[^0-9.]*//g')
+	 LOCALIP="""$LOCALIP"
+
 		if [ -f "/config/cgminer.conf" ]; then
 		MODEL="ANTMINER"
 		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+    WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/config"
 		CONFIG_FILE="cgminer.conf"
 		fi
+
 		if [ -f "/config/bmminer.conf" ]; then
 		MODEL="ANTMINER"
 		TOKEN=$(cat "/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-            	WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+    WORKER=$(cat "/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_PATH="/config"
 		CONFIG_FILE="bmminer.conf"
 		fi
-	fi
-	if [ -f "/opt/scripta/etc/miner.conf" ]; then
-		MODEL="BAIKAL"
-		TOKEN=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-    		WORKER=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-		CONFIG_PATH="/opt/scripta/etc"
-		CONFIG_FILE="miner.conf"
-	fi
-  if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
-    MODEL="BRAIINSOS"
-    TOKEN=$(cat "/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-    WORKER=$(cat "/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
-    CONFIG_PATH="/etc"
-  fi
-        POSTDATA=$(curl -s --insecure --header "Content-type: application/x-www-form-urlencoded" --request POST --data "token=$TOKEN" --data "worker=$WORKER" --data "ip=$LOCALIP" --data "data=$RESPONSE" https://api.minerstat.com/v2/get_asic)
-        remoteCMD
+
+    POSTDATA=$(curl -s --insecure --header "Content-type: application/x-www-form-urlencoded" --request POST --data "token=$TOKEN" --data "worker=$WORKER" --data "ip=$LOCALIP" --data "data=$RESPONSE" https://api.minerstat.com/v2/get_asic)
+    remoteCMD
     }
 
     # 5) CHECK SERVER RESPOSNE FOR POSSIBLE PENDING REMOTE COMMANDS
@@ -343,17 +178,11 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 
         SYNC_ROUND=$(($SYNC_ROUND + $SYNC_MAX))
 
-	if [ -d "/var/www/html/resources" ]; then
-		SYNC_ROUND=0
-	fi
-
         if [ "$(printf '%s' "$POSTDATA")" != "NULL" ]; then
             echo "Remote command => $POSTDATA"
         fi
         # echo $RESPONSE
 
-	#READ=$(cat "/$CONFIG_PATH/$CONFIG_FILE")
-		# Update config on the 3th sync
 			if [ "$SYNC_ROUND" != "135" ]; then
 				echo ""
 			else
@@ -376,8 +205,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             if [ $CONFIG_FILE != "null" ]; then
                 cd $CONFIG_PATH #ENTER CONFIG DIRECTORY
                 sleep 1 # REST A BIT
-                #echo "NEW CONFIG => $NEWCONFIG";
-                #if [ ! -z $NEWCONFIG ]; then
                 echo "CONFIG => Updating $CONFIG_PATH/$CONFIG_FILE "
                 rm "$CONFIG_PATH/$CONFIG_FILE"
                 curl -f --silent -L --insecure "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC" > "$CONFIG_PATH/$CONFIG_FILE"
@@ -387,15 +214,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 cat "$CONFIG_PATH/$CONFIG_FILE"
                 sleep 3
                 echo "REBOOTING MINER..."
-            	# SPONDS need reboot -f
-            	if ! grep -q InnoMiner "/etc/issue"; then
-        	if [ -f "/etc/cgminer.conf" ]; then
-                	reboot -f
-                fi
-           	fi
-                # Sponds end
-           	/sbin/shutdown -r now
-            	/sbin/reboot
+           	    /sbin/shutdown -r now
+            	  /sbin/reboot
             fi
         fi
         if [ "$(printf '%s' "$POSTDATA")" == "RESTART" ]; then
@@ -411,13 +231,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         if [ "$(printf '%s' "$POSTDATA")" == "REBOOT" ]; then
             sleep 3
             echo "REBOOTING MINER..."
-            # SPONDS need reboot -f
-            if ! grep -q InnoMiner "/etc/issue"; then
-        		    if [ -f "/etc/cgminer.conf" ]; then
-                  reboot -f
-                fi
-            fi
-            # Sponds end
             /sbin/shutdown -r now
             /sbin/reboot
         fi
@@ -427,10 +240,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             /sbin/shutdown -h now
         fi
 
-        # Wait after new sync round
-	sleep 40
-        check
-
     }
 
 
@@ -438,8 +247,14 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     # SYNC LOOP
 
     echo "Staring the hub.. (20 sec)"
-    sleep 20
     check
+    sleep 5
+
+    while true
+	  do
+	      sleep 45
+	      check
+	  done
 
 else
     echo "ERROR => Minerstat is already running! See: screen -x minerstat"
