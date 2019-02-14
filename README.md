@@ -80,14 +80,6 @@ cd /tmp && wget -O bulk.sh https://raw.githubusercontent.com/minerstat/minerstat
 First you need to import and/or add manually your workers to the website.
 The bulk install script will ask your **ACCESS_KEY** and **GROUP/LOCATION** only. The rest of process is automatic.
 
-### You want to re-run the bulk install script on your location ?
-
-The bulk install is designed to skip already installed machines. If you want to do a **force bulk install** use this command:
-
-``` sh
-cd /tmp && wget -O bulk.sh https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bulk-install.sh && chmod 777 *.sh && sh bulk.sh force
-```
-
 ### Antminer S9 Bulk Firmware Update from Ubuntu (to Support Asic Boost)
 
 Read "Bulk installation from Linux Computer" first.

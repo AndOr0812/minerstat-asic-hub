@@ -66,39 +66,39 @@ if [ "$COUNT" -gt "0" ]; then
 	ARRAY=$(echo $row | jq 'to_entries|map([.key] + .value.a|map(tostring)|join(" "))')
 	#echo "DEBUG OUTPUT, IP LIST:"
 	#echo $ARRAY
-	
-	for i in $(echo $ARRAY | jq  -r '.[]')    
+
+	for i in $(echo $ARRAY | jq  -r '.[]')
 	do
     	echo ""
    		IP=$(echo $row | jq -r " .[\"$i\"].info.os.localip")
    		LOGIN=$(echo $row | jq -r " .[\"$i\"].info.auth.user")
    		PASS=$(echo $row | jq -r " .[\"$i\"].info.auth.pass")
-   		
+
    		echo "----------------------------------------"
    		echo "$IP: Logging in with $LOGIN / $PASS [$i]"
-   		
-		
+
+
 		# SSH TOUCH
-		if [ "$1" != "force" ]; then
-			INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
-			INSTALL="screen -list | grep 'minerstat' && echo 'RESPONSE: Already installed' || ($INSTALL)"
-			echo "$IP: NON FORCED INSTALL"
-		else
+		#if [ "$1" != "force" ]; then
+				#INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
+				#INSTALL="screen -list | grep 'minerstat' && echo 'RESPONSE: Already installed' || ($INSTALL)"
+				#echo "$IP: NON FORCED INSTALL"
+			#else
 			INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
 			#INSTALL="screen -list | grep 'minerstat' && echo 'RESPONSE: Already installed' || ($INSTALL)"
-			echo "$IP: FORCE"
-		fi
+				#echo "$IP: FORCE"
+			#fi
 		sshpass -p$PASS ssh $LOGIN@$IP -p 22 -oStrictHostKeyChecking=no -oConnectTimeout=12 "$INSTALL"
 		if [ $? -ne 0 ]; then
 			echo "$IP: ERROR"
 		else
 			echo "$IP: OK"
 		fi
-		
+
 		echo "----------------------------------------"
-   		
+
 	done
-   	
+
 else
 	echo "You have no workers on $ACCESS_KEY account.";
 	echo "Common issue: Wrong Group/Location were used.";
