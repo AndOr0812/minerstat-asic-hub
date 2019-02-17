@@ -73,6 +73,7 @@ if [ "$COUNT" -gt "0" ]; then
    		IP=$(echo $row | jq -r " .[\"$i\"].info.os.localip")
    		LOGIN=$(echo $row | jq -r " .[\"$i\"].info.auth.user")
    		PASS=$(echo $row | jq -r " .[\"$i\"].info.auth.pass")
+		STYPE=$(echo $row | jq -r " .[\"$i\"].info.system")
 
    		echo "----------------------------------------"
    		echo "$IP: Logging in with $LOGIN / $PASS [$i]"
@@ -84,11 +85,23 @@ if [ "$COUNT" -gt "0" ]; then
 				#INSTALL="screen -list | grep 'minerstat' && echo 'RESPONSE: Already installed' || ($INSTALL)"
 				#echo "$IP: NON FORCED INSTALL"
 			#else
-			INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
 			#INSTALL="screen -list | grep 'minerstat' && echo 'RESPONSE: Already installed' || ($INSTALL)"
 				#echo "$IP: FORCE"
 			#fi
+
+		INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
+
+
+		if [ "$STYPE" == "baikal" ]; then
+			INSTALL="echo 'RESPONSE: Installing..'; sudo su -c 'cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i'"
+		fi
+
+		if [ "$STYPE" == "spondoolies" ]; then
+			INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && curl --insecure -H 'Cache-Control: no-cache' -O -s http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
+		fi
+
 		sshpass -p$PASS ssh $LOGIN@$IP -p 22 -oStrictHostKeyChecking=no -oConnectTimeout=12 "$INSTALL"
+
 		if [ $? -ne 0 ]; then
 			echo "$IP: ERROR"
 		else
