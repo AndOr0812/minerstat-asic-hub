@@ -418,6 +418,9 @@ fi
 
 ############################
 # Braiins CRONTAB
+
+rm /etc/crontabs/root # temp solution to solve bad installs
+
 if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
   if grep -q beat "/etc/crontabs/root"; then
     echo "CRON IS OK!"
