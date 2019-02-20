@@ -177,6 +177,7 @@ if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
     CONFIG_FILE="cgminer.conf"
     ASIC="braiinsos"
     CONFIG_PATH="/etc"
+    echo "BraiinsOS Detected"
 fi
 
 cd $CONFIG_PATH
