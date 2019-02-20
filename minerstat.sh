@@ -140,58 +140,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         # POSSIBLE NEED NEW METHOD OR MORE ADVANCED Detecting
         # TEMPORARY WILL BE GOOD
 
-        # ANTMINER
-        if [ -d "/config" ]; then
-            ASIC="antminer"
-            CONFIG_PATH="/config"
-            if [ -f "/config/cgminer.conf" ]; then
-                MINER="cgminer"
-            fi
-            if [ -f "/config/bmminer.conf" ]; then
-                MINER="bmminer"
-            fi
-            FOUND="Y"
-	    # CHECK PROTECTOR HEALTH
-	    CHECKHEALTH=$(ps | grep -c bitmain)
-      	    if [ "$CHECKHEALTH" != "1" ]
-            then
-              echo ""
-            else
-             screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh
-            fi
-            check
-        fi
-        # INNOSILICON
-        if [ -d "/home/www/conf" ]; then
-            ASIC="innosilicon"
-            MINER="cgminer"
-            CONFIG_PATH="/home/www/conf"
-            FOUND="Y"
-            check
-        fi
-	# DAYUN
-        if [ -d "/var/www/html/resources" ]; then
-            ASIC="dayun"
-            MINER="sgminer"
-            CONFIG_PATH="/var/www/html/resources"
-            FOUND="Y"
-            check
-        fi
-	# Inno
-	if grep -q InnoMiner "/etc/issue"; then
-		if [ -d "/config" ]; then
-			if [ -f "/etc/cgminer.conf" ]; then
-			MINER="cgminer"
-        		CONFIG_FILE="cgminer.conf"
-        		ASIC="innosilicon"
-			CONFIG_PATH="/etc"
-			check
-			fi
-		fi
-	fi
-
-
   if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+      echo "Braiins found"
       MINER="cgminer"
       CONFIG_FILE="cgminer.conf"
       ASIC="braiinsos"
@@ -210,7 +160,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
       # CHECK PROTECTOR HEALTH
       CHECKHEALTH=$(ps | grep -c spond_beat.sh)
       if [ "$CHECKHEALTH" != "1" ]
-          then
+      then
         echo ""
       else
         nohup /bin/sh /etc/minerstat/spond_beat.sh &
@@ -218,6 +168,38 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 check
     fi
   fi
+
+
+        # INNOSILICON
+        if [ -d "/home/www/conf" ]; then
+            ASIC="innosilicon"
+            MINER="cgminer"
+            CONFIG_PATH="/home/www/conf"
+            FOUND="Y"
+            check
+        fi
+	
+	# DAYUN
+        if [ -d "/var/www/html/resources" ]; then
+            ASIC="dayun"
+            MINER="sgminer"
+            CONFIG_PATH="/var/www/html/resources"
+            FOUND="Y"
+            check
+        fi
+	
+	# Inno
+	if grep -q InnoMiner "/etc/issue"; then
+		if [ -d "/config" ]; then
+			if [ -f "/etc/cgminer.conf" ]; then
+			MINER="cgminer"
+        		CONFIG_FILE="cgminer.conf"
+        		ASIC="innosilicon"
+			CONFIG_PATH="/etc"
+			check
+			fi
+		fi
+	fi
 
 	# BAIKAL
         if [ -d "/opt/scripta/etc" ]; then
