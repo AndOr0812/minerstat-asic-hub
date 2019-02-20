@@ -92,11 +92,11 @@ if [ "$COUNT" -gt "0" ]; then
 		INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
 
 
-		if [ "$STYPE" == "baikal" ]; then
+		if [ "$STYPE" = "baikal" ]; then
 			INSTALL="echo 'RESPONSE: Installing..'; sudo su -c 'cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i'"
 		fi
 
-		if [ "$STYPE" == "spondoolies" ]; then
+		if [ "$STYPE" = "spondoolies" ]; then
 			INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && curl --insecure -H 'Cache-Control: no-cache' -O -s http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $i"
 		fi
 
