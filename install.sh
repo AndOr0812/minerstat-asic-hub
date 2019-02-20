@@ -210,12 +210,20 @@ MODEL=$(sed -n 2p /usr/bin/compile_time)
 # DOWNLOAD
 chmod 777 minerstat.sh
 rm minerstat.sh
-if [ "$ASIC" != "antminer"]; then
+
+if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
 	echo "Downloading generic script"
-  curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
+  	curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
 else
-	echo "Downloading only antminer script"
-  curl --insecure -H 'Cache-Control: no-cache' -s -o minerstat.sh https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat_antminer.sh
+
+	if [ "$ASIC" = "antminer"]; then
+		echo "Downloading only antminer script"
+		curl --insecure -H 'Cache-Control: no-cache' -s -o minerstat.sh https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat_antminer.sh
+	else
+		echo "Downloading generic script"
+  		curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
+	fi
+
 fi
 
 chmod 777 minerstat.sh
