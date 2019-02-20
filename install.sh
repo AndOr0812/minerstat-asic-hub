@@ -211,6 +211,19 @@ MODEL=$(sed -n 2p /usr/bin/compile_time)
 chmod 777 minerstat.sh
 rm minerstat.sh
 
+echo "Debug ASIC type: $ASIC"
+
+if [ -f "/etc/init.d/cgminer.sh" ]; then
+    ASIC="antminer"
+fi
+
+if [ -f "/etc/init.d/bmminer.sh" ]; then
+    ASIC="antminer"
+fi
+
+echo "Debug ASIC type: $ASIC"
+
+
 if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
 	echo "Downloading generic script"
   	curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
