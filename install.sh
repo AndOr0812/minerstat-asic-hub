@@ -306,7 +306,7 @@ if [ -f "/config/network.conf" ]; then
         echo "cron installed"
     else
         echo "cron not installed, installing"
-        echo "screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh" >> /config/network.conf
+        #echo "screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh" >> /config/network.conf
     fi
 fi
 
@@ -493,7 +493,7 @@ if [ -f "/etc/cgminer.conf" ]; then
 else
 	echo "Notice => You can check the process running with: screen -list"
 	screen -A -m -d -S minerstat ./minerstat.sh $4
-  screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh
+  	#screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh
 	screen -list
 	nohup sync > /dev/null 2>&1 &
 fi
