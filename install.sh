@@ -225,15 +225,15 @@ echo "Debug ASIC type: $ASIC"
 
 
 if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
-	echo "Downloading generic script"
+	echo "Downloading generic script %1"
   	curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
 else
 
-	if [ "$ASIC" = "antminer"]; then
+	if [ $ASIC = "antminer" ]; then
 		echo "Downloading only antminer script"
 		curl --insecure -H 'Cache-Control: no-cache' -s -o minerstat.sh https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat_antminer.sh
 	else
-		echo "Downloading generic script"
+		echo "Downloading generic script %2"
   		curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
 	fi
 
