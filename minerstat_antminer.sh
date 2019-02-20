@@ -15,6 +15,12 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     	# Fake Process, Boot & Double instance protection
     	screen -A -m -d -S ms-run sleep 7h
     fi
+    
+    # CRONTAB
+    mkdir -p /var/spool/cron/crontabs 
+    #echo "* * * * * screen -wipe" > /var/spool/cron/crontabs/root
+    echo "* * * * * /bin/sh /config/minerstat/bitmain_beat.sh" > /var/spool/cron/crontabs/root
+    start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 
 
     sleep 10
 
