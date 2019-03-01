@@ -80,6 +80,17 @@ cd /tmp && wget -O bulk.sh https://raw.githubusercontent.com/minerstat/minerstat
 First you need to import and/or add manually your workers to the website.
 The bulk install script will ask your **ACCESS_KEY** and **GROUP/LOCATION** only. The rest of process is automatic.
 
+## Bulk Installation from macOS Computer
+``` sh
+$ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+$ brew install http://git.io/sshpass.rb
+$ brew install wget curl
+$ wget -O bulk-installer-mac https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bulk-installer-mac && chmod 777 bulk-installer-$ $ mac && ./bulk-installer-mac
+```
+
+First you need to import and/or add manually your workers to the website.
+The bulk install script will ask your **ACCESS_KEY** and **GROUP/LOCATION** only. The rest of process is automatic.
+
 ### Antminer S9 Bulk Firmware Update from Ubuntu (to Support Asic Boost)
 
 Read "Bulk installation from Linux Computer" first.
