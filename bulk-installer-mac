@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# ASK USER INPUT
+echo "Please enter your ACCESS KEY"
+read ACCESS_KEY
+echo ""
+
+echo "Please enter your group/location [Default: asic] [Enter to skip]"
+read GROUP
+echo ""
+
+if [ -z "$ACCESS_KEY" -a "$ACCESS_KEY" != " " ]; then
+	echo "No accesskey provided"
+	exit 0
+fi
+
+if [ -z "$GROUP" -a "$GROUP" != " " ]; then
+	GROUP="asic"
+	echo "WARNING: No group/location provided."
+fi
+
+filename=$(curl -s https://api.minerstat.com/v2/stats/$ACCESS_KEY/asicgroups/$GROUP)
+
+echo "WARNING: The software will be installed on all of your ASIC workers."
+echo ""
+echo "$filename" | while IFS= read -r line ; do
+  IFS=',' read -ra NAMES <<< "$line"
+  IP=${NAMES[0]};
+  WORKER=${NAMES[3]};
+  echo "$IP - $WORKER"
+done
+echo ""
+echo "!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
+
+
+echo ""
+echo ""
+
+echo "Press Ctrl + C to abort."
+echo ""
+read -n 1 -s -r -p "Press any key to continue"
+
+echo "$filename" | while IFS= read -r line ; do
+  IFS=',' read -ra NAMES <<< "$line"
+
+  IP=${NAMES[0]};
+  LOGIN=${NAMES[1]};
+  PASS=${NAMES[2]};
+  WORKER=${NAMES[3]};
+  STYPE=${NAMES[4]};
+
+  echo ""
+  echo "----------------------------------------"
+  echo "$IP: Logging in with $LOGIN / $PASS [$WORKER] - $STYPE"
+  echo "----------------------------------------"
+
+  INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $WORKER"
+
+
+	if [ "$STYPE" = "baikal" ]; then
+		INSTALL="echo 'RESPONSE: Installing..'; sudo su -c 'cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $WORKER'"
+	fi
+
+	if [ "$STYPE" = "spondoolies" ]; then
+		INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && curl --insecure -H 'Cache-Control: no-cache' -O -s http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $WORKER"
+	fi
+
+	sshpass -p$PASS ssh $LOGIN@$IP -p 22 -oStrictHostKeyChecking=no -oConnectTimeout=12 "$INSTALL"
+
+	if [ $? -ne 0 ]; then
+		echo "$IP: ERROR"
+	else
+		echo "$IP: OK"
+	fi
+
+
+done
+
+echo "Done"
+echo ""
