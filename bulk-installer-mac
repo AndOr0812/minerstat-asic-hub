@@ -65,7 +65,14 @@ echo "$filename" | while IFS= read -r line ; do
 		INSTALL="echo 'RESPONSE: Installing..'; cd /tmp && curl --insecure -H 'Cache-Control: no-cache' -O -s http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh $ACCESS_KEY $WORKER"
 	fi
 
-	sshpass -p$PASS ssh $LOGIN@$IP -p 22 -oStrictHostKeyChecking=no -oConnectTimeout=12 "$INSTALL"
+	osascript <<END
+tell application "Terminal"
+		do script "sleep 5; screen -x $WORKER; exit"
+end tell
+END
+
+	screen -A -m -D -S $WORKER sshpass -p$PASS ssh $LOGIN@$IP -p 22 -oStrictHostKeyChecking=no -oConnectTimeout=12 "$INSTALL"
+
 
 	if [ $? -ne 0 ]; then
 		echo "$IP: ERROR"
@@ -76,5 +83,6 @@ echo "$filename" | while IFS= read -r line ; do
 
 done
 
+echo ""
 echo "Done"
 echo ""
