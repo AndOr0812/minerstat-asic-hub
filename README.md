@@ -85,7 +85,7 @@ The bulk install script will ask your **ACCESS_KEY** and **GROUP/LOCATION** only
 $ /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 $ brew install http://git.io/sshpass.rb
 $ brew install wget curl
-$ wget -O bulk-installer-mac https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bulk-installer-mac && chmod 777 bulk-installer-$ $ mac && ./bulk-installer-mac
+$ wget -O bulk-installer-mac https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bulk-installer-mac && chmod 777 bulk-installer-mac && ./bulk-installer-mac
 ```
 
 First you need to import and/or add manually your workers to the website.
