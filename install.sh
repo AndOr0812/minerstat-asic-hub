@@ -175,7 +175,7 @@ fi
 
 if [ -d "/home/www/conf" ]; then
     MINER="cgminer"
-    CONFIG_FILE="cgminer.conf"
+    CONFIG_FILE="miner.conf"
     CONFIG_PATH="/home/www/conf"
     ASIC="innosilicon"
 fi
