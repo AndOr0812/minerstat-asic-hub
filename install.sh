@@ -137,13 +137,6 @@ if [ -d "/var/www/html/resources" ]; then
     ASIC="dayun"
 fi
 
-if [ -d "/home/www/conf" ]; then
-    MINER="cgminer"
-    CONFIG_FILE="cgminer.conf"
-    CONFIG_PATH="/home/www/conf"
-    ASIC="innosilicon"
-fi
-
 ############################
 # Spondoolies
 if [ -f "/etc/cgminer.conf" ]; then
@@ -180,7 +173,16 @@ if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
     echo "BraiinsOS Detected"
 fi
 
+if [ -d "/home/www/conf" ]; then
+    MINER="cgminer"
+    CONFIG_FILE="cgminer.conf"
+    CONFIG_PATH="/home/www/conf"
+    ASIC="innosilicon"
+fi
+
 cd $CONFIG_PATH
+
+echo "Configuration path: $CONFIG_PATH"
 
 #############################
 # REMOVE PREV. Installation
@@ -277,6 +279,8 @@ rm inno_beat.sh
 rm bitmain_beat.sh
 rm braiins_beat.sh
 
+echo "Downloading path: $CONFIG_PATH"
+
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/spond_start.sh
@@ -299,6 +303,9 @@ chmod 777 braiins_beat.sh
 #ln -s runmeonboot /etc/rc.d/
 
 dir=$(pwd)
+
+echo "Debug all fine? ls DIR"
+ls $CONFIG_PATH
 
 if [ -f "/config/network.conf" ]; then
     ## WIPE
