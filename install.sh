@@ -276,6 +276,7 @@ rm spond_start.sh
 rm spond_beat.sh
 rm baikal_beat.sh
 rm inno_beat.sh
+rm inno_old_beat.sh
 rm bitmain_beat.sh
 rm braiins_beat.sh
 
@@ -296,7 +297,7 @@ if [ -d "/home/www/conf" ]; then
 	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
 	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
 	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/update.sh
-	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
+	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_old_beat.sh
 	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
 	mkdir -p /var/spool/cron/crontabs 
     	#echo "* * * * * screen -wipe" > /var/spool/cron/crontabs/root
