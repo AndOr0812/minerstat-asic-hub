@@ -294,6 +294,8 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 
 # Oly for old Inno's
 if [ -d "/home/www/conf" ]; then
+	echo "CD /home/www/conf/minerstat & WGET"
+	cd /home/www/conf/minerstat
 	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
 	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
 	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/update.sh
