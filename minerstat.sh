@@ -169,15 +169,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     fi
   fi
 
-
-        # INNOSILICON
-        if [ -d "/home/www/conf" ]; then
-            ASIC="innosilicon"
-            MINER="cgminer"
-            CONFIG_PATH="/home/www/conf"
-            FOUND="Y"
-            check
-        fi
 	
 	# DAYUN
         if [ -d "/var/www/html/resources" ]; then
@@ -211,6 +202,16 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             check
         fi
         # BRAIINS OS
+	
+	 # INNOSILICON
+        if [ -d "/home/www/conf" ]; then
+            ASIC="innosilicon"
+            MINER="cgminer"
+            CONFIG_PATH="/home/www/conf"
+	    CONFIG_FILE="miner.conf"
+            FOUND="Y"
+            check
+        fi
 
         # MINER
         if [ $TOKEN == "null" ]; then
@@ -310,6 +311,15 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 		CONFIG_PATH="/opt/scripta/etc"
 		CONFIG_FILE="miner.conf"
 	fi
+	# INNOSILICON
+        if [ -d "/home/www/conf" ]; then
+            ASIC="innosilicon"
+            MINER="cgminer"
+	    TOKEN=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+    	    WORKER=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+            CONFIG_PATH="/home/www/conf"
+            CONFIG_FILE="miner.conf"
+        fi
   if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
     MODEL="BRAIINSOS"
     TOKEN=$(cat "/etc/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
