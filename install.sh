@@ -291,6 +291,18 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bitmain_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/braiins_beat.sh
 
+# Oly for old Inno's
+if [ -d "/home/www/conf" ]; then
+	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/runmeonboot
+	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hbeat.sh
+	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/update.sh
+	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
+	wget http://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/minerstat.sh
+	mkdir -p /var/spool/cron/crontabs 
+    	#echo "* * * * * screen -wipe" > /var/spool/cron/crontabs/root
+    	echo "* * * * * /bin/sh /home/www/conf/minerstat/inno_old_beat.sh" > /var/spool/cron/crontabs/root
+    	start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 
+fi
 
 chmod 777 runmeonboot
 chmod 777 hbeat.sh
