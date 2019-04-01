@@ -38,6 +38,10 @@ if [ -d "/var/www/html/resources" ]; then
 	rm /bin/sh
 	cp /bin/bash /bin/sh
 	#wget https://busybox.net/downloads/binaries/1.21.1/busybox-armv7l # change this to GITHUB
+	mkdir -p /var/spool/cron/crontabs 
+    	#echo "* * * * * screen -wipe" > /var/spool/cron/crontabs/root
+    	echo "* * * * * /bin/sh /var/www/html/resources/minerstat/hbeat.sh" > /var/spool/cron/crontabs/root
+    	start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 
 fi
 
 if [ -f "/etc/cgminer.conf" ]; then
@@ -161,6 +165,10 @@ if grep -q InnoMiner "/etc/issue"; then
         		CONFIG_FILE="cgminer.conf"
         		ASIC="innosilicon"
 			CONFIG_PATH="/config"
+			
+		        mkdir -p /var/spool/cron/crontabs 
+    			echo "* * * * * /bin/sh /config/minerstat/inno_beat.sh" > /var/spool/cron/crontabs/root
+    			start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 			
 		fi
 	fi
 fi
@@ -420,7 +428,7 @@ if [ -d "/var/www/html/resources" ]; then
     		echo "CRON IS OK!"
 	else
 		echo "CRON APPLIED !"
-    		echo "* * * * * sh /var/www/html/resources/minerstat/hbeat.sh" >> mycron
+    		echo "* * * * * /bin/sh /var/www/html/resources/minerstat/hbeat.sh" >> mycron
 		crontab mycron
 	fi
 	rm mycron
