@@ -56,6 +56,14 @@ if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
   opkg install curl
 fi
 
+if [ -f "/data/etc/config" ]; then
+  # Screen and curl were removed
+  # https://openwrt.org/packages/start
+  opkg update
+  opkg install screen
+  opkg install curl
+fi
+
 #############################
 # TESTING CURL
 echo "-*-*-*-*-*-*-*-*-*-*-*-*"
@@ -186,6 +194,13 @@ if [ -d "/home/www/conf" ]; then
     CONFIG_FILE="miner.conf"
     CONFIG_PATH="/home/www/conf"
     ASIC="innosilicon"
+fi
+
+if [ -d "/data/etc/config" ]; then
+    MINER="cgminer"
+    CONFIG_FILE="pools"
+    CONFIG_PATH="/data/etc/config"
+    ASIC="whatsminer"
 fi
 
 cd $CONFIG_PATH
