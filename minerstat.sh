@@ -124,6 +124,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 fetch
                 break
                 ;;
+	    whatsminer)
+	    	fetch
+		break
+		;;
             null)
                 #echo "INFO => Detecting ASIC Type"
                 detect
@@ -178,6 +182,17 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             FOUND="Y"
             check
         fi
+	
+	 if [ -d "/data/etc/config" ]; then
+            MINER="cgminer"
+	    CONFIG_FILE="pools"
+	    CONFIG_PATH="/data/etc/config"
+	    ASIC="whatsminer"
+            FOUND="Y"
+            check
+        fi
+	
+	
 	
 	# Inno
 	if grep -q InnoMiner "/etc/issue"; then
@@ -319,6 +334,15 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
     	    WORKER=$(cat "/opt/scripta/etc/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
             CONFIG_PATH="/home/www/conf"
             CONFIG_FILE="miner.conf"
+        fi
+	# WHATSMINER
+	if [ -d "/data/etc/config" ]; then
+            MINER="cgminer"
+	    CONFIG_FILE="pools"
+	    CONFIG_PATH="/data/etc/config"
+	    ASIC="whatsminer"
+ 	    TOKEN=$(cat "/data/etc/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+    	    WORKER=$(cat "/data/etc/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
         fi
   if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
     MODEL="BRAIINSOS"
