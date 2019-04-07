@@ -556,6 +556,10 @@ else
 	nohup sync > /dev/null 2>&1 &
 fi
 
+if [ -d "/data/etc/config" ]; then
+	screen -A -m -d -S minerstat /bin/sh /data/etc/config/minerstat/minerstat.sh
+fi
+
 # DEBUG
 sleep 2
 echo "Extra: $4"
