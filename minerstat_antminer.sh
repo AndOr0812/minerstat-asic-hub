@@ -7,7 +7,7 @@ screen -wipe
 
 sleep 1
 
-if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
+if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 
     echo "--------- MINERSTAT ASIC HUB -----------"
 
@@ -115,7 +115,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             FOUND="Y"
 	          # CHECK PROTECTOR HEALTH
 	          CHECKHEALTH=$(ps | grep -c bitmain)
-      	    if [ "$CHECKHEALTH" == "1" ]; then
+      	    if [ "$CHECKHEALTH" = "1" ]; then
              screen -A -m -d -S secure sh /config/minerstat/bitmain_beat.sh
             fi
         fi
@@ -139,7 +139,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         CONFIG_FILE="bmminer.conf"
         fi
 
-        if [ $FOUND == "null" ]; then
+        if [ $FOUND = "null" ]; then
             FOUND="err"
             echo "ERROR => This machine is not supported."
             echo "ERROR => Try to use ASIC Node instead."
@@ -179,7 +179,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         fi
         # echo $RESPONSE
 
-			if [ "$SYNC_ROUND" == "135" ]; then
+			if [ "$SYNC_ROUND" = "135" ]; then
 				rm "$CONFIG_PATH/server.json"
 				POSTIT=$(cd $CONFIG_PATH; wget -O server.json "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC")
 				if [ -s "$CONFIG_PATH/server.json" ]
@@ -195,7 +195,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 			    fi
 			fi
 
-        if [ "$(printf '%s' "$POSTDATA")" == "CONFIG" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "CONFIG" ]; then
             if [ $CONFIG_FILE != "null" ]; then
                 cd $CONFIG_PATH #ENTER CONFIG DIRECTORY
                 sleep 1 # REST A BIT
@@ -212,8 +212,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             	  /sbin/reboot
             fi
         fi
-        if [ "$(printf '%s' "$POSTDATA")" == "RESTART" ]; then
-            if [ $ASIC == "antminer" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "RESTART" ]; then
+            if [ $ASIC = "antminer" ]; then
                auto echo "RESTARTING MINER..."
                 sleep 2
                 /etc/init.d/cgminer.sh restart
@@ -222,13 +222,13 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 POSTDATA="REBOOT"
             fi
         fi
-        if [ "$(printf '%s' "$POSTDATA")" == "REBOOT" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "REBOOT" ]; then
             sleep 3
             echo "REBOOTING MINER..."
             /sbin/shutdown -r now
             /sbin/reboot
         fi
-        if [ "$(printf '%s' "$POSTDATA")" == "SHUTDOWN" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "SHUTDOWN" ]; then
             sleep 2
             echo "SHUTTING DOWN..."
             /sbin/shutdown -h now
