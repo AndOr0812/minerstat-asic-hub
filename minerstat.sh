@@ -7,7 +7,7 @@ screen -wipe
 
 sleep 1
 
-if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
+if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 
     echo "--------- MINERSTAT ASIC HUB -----------"
 
@@ -229,13 +229,13 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
         fi
 
         # MINER
-        if [ $TOKEN == "null" ]; then
+        if [ $TOKEN = "null" ]; then
             #MODEL=$(sed -n 2p /usr/bin/compile_time)
             TOKEN=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             WORKER=$(cat "$CONFIG_PATH/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
         fi
 
-        if [ $FOUND == "null" ]; then
+        if [ $FOUND = "null" ]; then
             FOUND="err"
             echo "ERROR => This machine is not supported."
             echo "ERROR => Try to use ASIC Node instead."
@@ -388,7 +388,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
 			fi
 			fi
 
-        if [ "$(printf '%s' "$POSTDATA")" == "CONFIG" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "CONFIG" ]; then
             if [ $CONFIG_FILE != "null" ]; then
                 cd $CONFIG_PATH #ENTER CONFIG DIRECTORY
                 sleep 1 # REST A BIT
@@ -414,8 +414,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             	/sbin/reboot
             fi
         fi
-        if [ "$(printf '%s' "$POSTDATA")" == "RESTART" ]; then
-            if [ $ASIC == "antminer" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "RESTART" ]; then
+            if [ $ASIC = "antminer" ]; then
                auto echo "RESTARTING MINER..."
                 sleep 2
                 /etc/init.d/cgminer.sh restart
@@ -424,7 +424,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
                 POSTDATA="REBOOT"
             fi
         fi
-        if [ "$(printf '%s' "$POSTDATA")" == "REBOOT" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "REBOOT" ]; then
             sleep 3
             echo "REBOOTING MINER..."
             # SPONDS need reboot -f
@@ -437,7 +437,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" == "forcestart" ]; then
             /sbin/shutdown -r now
             /sbin/reboot
         fi
-        if [ "$(printf '%s' "$POSTDATA")" == "SHUTDOWN" ]; then
+        if [ "$(printf '%s' "$POSTDATA")" = "SHUTDOWN" ]; then
             sleep 2
             echo "SHUTTING DOWN..."
             /sbin/shutdown -h now
