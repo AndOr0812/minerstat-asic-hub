@@ -28,6 +28,7 @@ Monitoring and management client installed on the ASIC. The software makes possi
 * Dayun Zig Z1
 * Dayun Zig Z1+
 * Spondoolies SPx36
+* Hyperbit BWL21
 
 Work in progress for more ASIC support.
 
@@ -71,6 +72,7 @@ Default SSH Login
 | Innosilicon   | root      | blacksheepwall  |
 | Dayun         | root      | envision        |
 | Spondoolies   | root      | root            |
+| Hyperbit      | root      | bwcon           |
 
 ## Bulk Installation from Linux Computer [ or from msOS]
 ``` sh
