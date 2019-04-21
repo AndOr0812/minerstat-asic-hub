@@ -203,6 +203,13 @@ if [ -d "/data/etc/config" ]; then
     ASIC="whatsminer"
 fi
 
+if [ -d "/usr/app" ]; then
+    MINER="cpuminer"
+    CONFIG_FILE="conf.default"
+    CONFIG_PATH="/usr/app"
+    ASIC="hyperbit"
+fi
+
 cd $CONFIG_PATH
 
 echo "Configuration path: $CONFIG_PATH"
@@ -302,6 +309,7 @@ rm inno_beat.sh
 rm inno_old_beat.sh
 rm bitmain_beat.sh
 rm braiins_beat.sh
+rm hyperbit_beat.sh
 
 echo "Downloading path: $CONFIG_PATH"
 
@@ -314,6 +322,7 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/inno_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bitmain_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/braiins_beat.sh
+curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hyperbit_beat.sh
 
 # Oly for old Inno's
 if [ -d "/home/www/conf" ]; then
@@ -338,6 +347,7 @@ chmod 777 baikal_beat.sh
 chmod 777 inno_beat.sh
 chmod 777 bitmain_beat.sh
 chmod 777 braiins_beat.sh
+chmod 777 hyperbit_beat.sh
 #ln -s runmeonboot /etc/rc.d/
 
 dir=$(pwd)
@@ -495,6 +505,18 @@ if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
 fi
 
 
+#####
+# Hyperbit Crontab
+
+if [ -f "/usr/app/userapp.sh" ]; then
+	if grep -q minerstat "/usr/app/userapp.sh"; then
+		echo "Crontab is ok!"
+	else
+		echo "INSTALLING CRON FOR Hyperbit"
+		echo "/usr/app/minerstat/hyperbit_beat.sh&" >> /usr/app/userapp.sh
+	fi
+fi
+
 #echo -n > /etc/init.d/minerstat
 #chmod 777 /etc/init.d/minerstat
 #echo "#!/bin/sh" >> /etc/init.d/minerstat
@@ -558,6 +580,10 @@ fi
 
 if [ -d "/data/etc/config" ]; then
 	screen -A -m -d -S minerstat /bin/sh /data/etc/config/minerstat/minerstat.sh
+fi
+
+if [ -f "/usr/app/userapp.sh" ]; then
+	nohup /bin/sh /usr/app/minerstat/minerstat.sh
 fi
 
 # DEBUG
