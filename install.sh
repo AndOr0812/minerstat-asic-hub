@@ -584,6 +584,8 @@ fi
 
 if [ -f "/usr/app/userapp.sh" ]; then
 	nohup /bin/sh /usr/app/minerstat/hyperbit_beat.sh&
+	# reboot need for this machine
+	reboot
 fi
 
 # DEBUG
