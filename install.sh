@@ -583,7 +583,7 @@ if [ -d "/data/etc/config" ]; then
 fi
 
 if [ -f "/usr/app/userapp.sh" ]; then
-	nohup /bin/sh /usr/app/minerstat/minerstat.sh
+	nohup /bin/sh /usr/app/minerstat/hyperbit_beat.sh&
 fi
 
 # DEBUG
