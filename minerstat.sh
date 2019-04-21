@@ -128,6 +128,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 	    	fetch
 		break
 		;;
+	    hyperbit)
+	    	fetch
+		break
+		;;
             null)
                 #echo "INFO => Detecting ASIC Type"
                 detect
@@ -228,6 +232,15 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
             check
         fi
 
+	if [ -d "/usr/app" ]; then
+   	    MINER="cpuminer"
+    	    CONFIG_FILE="conf.default"
+    	    CONFIG_PATH="/usr/app"
+    	    ASIC="hyperbit"
+	    FOUND="Y"
+            check
+	fi
+
         # MINER
         if [ $TOKEN = "null" ]; then
             #MODEL=$(sed -n 2p /usr/bin/compile_time)
@@ -289,6 +302,13 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 		TOKEN=$(cat "/var/www/html/resources/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
             	WORKER=$(cat "/var/www/html/resources/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 		CONFIG_FILE="cgminer.config"
+	fi
+	if [ -d "/usr/app" ]; then
+   	    MODEL="HYPERBIT"
+    	    CONFIG_FILE="conf.default"
+    	    CONFIG_PATH="/usr/app"
+    	    TOKEN=$(cat "/usr/app/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+            WORKER=$(cat "/usr/app/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
 	fi
 	if grep -q InnoMiner "/etc/issue"; then
 		MODEL="INNOSILICON"
