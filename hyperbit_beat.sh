@@ -6,7 +6,7 @@ check() {
 
   sleep 20
 
-  CHECKHEALTH=$(ps | grep -c minerstat.sh)
+  CHECKHEALTH=$(ps aux | grep -c minerstat.sh)
 
   if [ "$CHECKHEALTH" != "1" ]
   then
