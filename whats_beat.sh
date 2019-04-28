@@ -1,22 +1,40 @@
 #!/bin/sh
 
-# CURRENTLY ONLY USED FOR WHATSMINER TO MAINTAIN UPTIME AND STABILITY
+# CURRENTLY ONLY USED FOR DAYUN TO MAINTAIN UPTIME AND STABILITY
 
-check() {
+sleep 1
 
-  sleep 20
+# NO PROCESS RUN MINERSTAT
+if ! screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
+  echo "No process, Restart"
+  screen -S minerstat -X quit # kill running process
+  screen -S ms-run -X quit # kill running process
+  screen -wipe
+  screen -A -m -d -S minerstat sh /data/etc/config/minerstat/minerstat.sh
+  exit
+fi
 
-  CHECKHEALTH=$(ps | grep -c minerstat.sh)
+# ONLY MS-RUN RUN MINERSTAT
+if screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
+  echo "Frozen, restart"
+  screen -S minerstat -X quit # kill running process
+  screen -S ms-run -X quit # kill running process
+  screen -wipe
+  screen -A -m -d -S minerstat sh /data/etc/config/minerstat/minerstat.sh
+  exit
+fi
 
-  if [ "$CHECKHEALTH" != "1" ]
-  then
-  	echo ""
-  else
-  	nohup /bin/sh /data/etc/config/minerstat/minerstat.sh &
-  fi
+# ONLY MINERSTAT
+if screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
+  echo "Frozen, restart (probably was fine, better to be secure)"
+  screen -S minerstat -X quit # kill running process
+  screen -S ms-run -X quit # kill running process
+  screen -wipe
+  screen -A -m -d -S minerstat sh /data/etc/config/minerstat/minerstat.sh
+  exit
+fi
 
-  check
-
-}
-
-check
+# ALL FINE
+if screen -list | grep -q "ms-run" && screen -list | grep -q "minerstat"; then
+  echo "All fine"
+fi
