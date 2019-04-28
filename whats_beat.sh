@@ -2,7 +2,7 @@
 
 # CURRENTLY ONLY USED FOR DAYUN TO MAINTAIN UPTIME AND STABILITY
 
-sleep 1
+check() {
 
 # NO PROCESS RUN MINERSTAT
 if ! screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
@@ -38,3 +38,10 @@ fi
 if screen -list | grep -q "ms-run" && screen -list | grep -q "minerstat"; then
   echo "All fine"
 fi
+
+ sleep 20
+ check
+
+}
+
+check
