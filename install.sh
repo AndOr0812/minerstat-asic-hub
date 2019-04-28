@@ -226,6 +226,7 @@ echo "Configuration path: $CONFIG_PATH"
 screen -S minerstat -X quit # kill running process
 screen -S ms-run -X quit # kill running process
 screen -ls secure | grep -E '\s+[0-9]+\.' | awk -F ' ' '{print $1}' | while read s; do screen -XS $s quit; done
+screen -ls watchdog | grep -E '\s+[0-9]+\.' | awk -F ' ' '{print $1}' | while read s; do screen -XS $s quit; done
 
 screen -wipe
 rm -rf minerstat
