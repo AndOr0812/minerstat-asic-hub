@@ -190,14 +190,12 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 	 if [ -d "/data/etc/config" ]; then
             MINER="cgminer"
 	    CONFIG_FILE="pools"
-	    CONFIG_PATH="/data/etc/config"
+	    CONFIG_PATH="/data_bak/etc/config"
 	    ASIC="whatsminer"
             FOUND="Y"
             check
         fi
-	
-	
-	
+		
 	# Inno
 	if grep -q InnoMiner "/etc/issue"; then
 		if [ -d "/config" ]; then
@@ -414,6 +412,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
                 sleep 1 # REST A BIT
                 #echo "NEW CONFIG => $NEWCONFIG";
                 #if [ ! -z $NEWCONFIG ]; then
+		if [ -d "/data/etc/config" ]; then
+	    		CONFIG_FILE="pools"
+	    		CONFIG_PATH="/data/etc/config"
+      		fi
                 echo "CONFIG => Updating $CONFIG_PATH/$CONFIG_FILE "
                 rm "$CONFIG_PATH/$CONFIG_FILE"
                 curl -f --silent -L --insecure "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC" > "$CONFIG_PATH/$CONFIG_FILE"
