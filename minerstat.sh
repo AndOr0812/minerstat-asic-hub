@@ -388,6 +388,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 
 	#READ=$(cat "/$CONFIG_PATH/$CONFIG_FILE")
 		# Update config on the 3th sync
+		if [ ! -d "/data/etc/config" ]; then
 			if [ "$SYNC_ROUND" != "135" ]; then
 				echo ""
 			else
@@ -405,6 +406,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
   				echo " file does not exist, or is empty "
 			fi
 			fi
+		fi
 
         if [ "$(printf '%s' "$POSTDATA")" = "CONFIG" ]; then
             if [ $CONFIG_FILE != "null" ]; then
