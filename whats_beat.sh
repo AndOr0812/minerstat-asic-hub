@@ -2,7 +2,11 @@
 
 # CURRENTLY ONLY USED FOR DAYUN TO MAINTAIN UPTIME AND STABILITY
 
+REACH=0
+
 check() {
+
+REACH=$((REACH+1))
 
 # NO PROCESS RUN MINERSTAT
 if ! screen -list | grep -q "ms-run" && ! screen -list | grep -q "minerstat"; then
@@ -39,8 +43,16 @@ if screen -list | grep -q "ms-run" && screen -list | grep -q "minerstat"; then
   echo "All fine"
 fi
 
- sleep 20
- check
+if [ "$REACH" = "6" ]; then
+  REACH=0
+  screen -S minerstat -X quit # kill running process
+  screen -S ms-run -X quit # kill running process
+  screen -wipe
+  screen -A -m -d -S minerstat sh /data_bak/etc/config/minerstat/minerstat.sh
+fi
+
+sleep 20
+check
 
 }
 
