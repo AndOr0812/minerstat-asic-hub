@@ -361,8 +361,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 	    CONFIG_FILE="pools"
 	    CONFIG_PATH="/data/etc/config"
 	    ASIC="whatsminer"
- 	    TOKEN=$(cat "/data/etc/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
-    	    WORKER=$(cat "/data/etc/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
+ 	    TOKEN=$(cat "/data_bak/etc/config/minerstat/minerstat.txt" | grep TOKEN= | sed 's/TOKEN=//g')
+    	    WORKER=$(cat "/data_bak/etc/config/minerstat/minerstat.txt" | grep WORKER= | sed 's/WORKER=//g')
         fi
   if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
     MODEL="BRAIINSOS"
