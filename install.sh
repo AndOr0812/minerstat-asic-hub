@@ -536,7 +536,8 @@ if [ -f "/data/etc/init.d/boot" ]; then
 		echo "Crontab is ok!"
 	else
 		echo "INSTALLING CRON FOR Hyperbit"
-		echo "/data/etc/config/minerstat/whats_beat.sh&" >> /data/etc/init.d/boot
+		echo "screen -A -m -d -S watchdog sh /data/etc/config/minerstat/whats_beat.sh" >> /data/etc/init.d/boot
+		screen -A -m -d -S watchdog sh /data/etc/config/minerstat/whats_beat.sh
 	fi
 fi
 
