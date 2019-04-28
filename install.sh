@@ -517,6 +517,20 @@ if [ -f "/usr/app/userapp.sh" ]; then
 	fi
 fi
 
+
+####
+# Whatsminer crontab
+
+if [ -f "/data/etc/init.d/boot" ]; then
+	if grep -q minerstat "/data/etc/init.d/boot"; then
+		echo "Crontab is ok!"
+	else
+		echo "INSTALLING CRON FOR Hyperbit"
+		echo "/data/etc/config/minerstat/whats_beat.sh&" >> /data/etc/init.d/boot
+	fi
+fi
+
+
 #echo -n > /etc/init.d/minerstat
 #chmod 777 /etc/init.d/minerstat
 #echo "#!/bin/sh" >> /etc/init.d/minerstat
