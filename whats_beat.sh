@@ -43,7 +43,7 @@ if screen -list | grep -q "ms-run" && screen -list | grep -q "minerstat"; then
   echo "All fine"
 fi
 
-if [ "$REACH" = "3" ]; then
+if [ "$REACH" = "2" ]; then
   REACH=0
   screen -S minerstat -X quit # kill running process
   screen -S ms-run -X quit # kill running process
