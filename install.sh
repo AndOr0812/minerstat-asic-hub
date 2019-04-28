@@ -206,7 +206,7 @@ fi
 if [ -d "/data/etc/config" ]; then
     MINER="cgminer"
     CONFIG_FILE="pools"
-    CONFIG_PATH="/data/etc/config"
+    CONFIG_PATH="/data_bak/etc/config"
     ASIC="whatsminer"
 fi
 
@@ -536,8 +536,8 @@ if [ -f "/data/etc/init.d/boot" ]; then
 		echo "Crontab is ok!"
 	else
 		echo "INSTALLING CRON FOR Hyperbit"
-		echo "screen -A -m -d -S watchdog sh /data/etc/config/minerstat/whats_beat.sh" >> /data/etc/init.d/boot
-		screen -A -m -d -S watchdog sh /data/etc/config/minerstat/whats_beat.sh
+		echo "screen -A -m -d -S watchdog sh /data_bak/etc/config/minerstat/whats_beat.sh" >> /data/etc/init.d/boot
+		screen -A -m -d -S watchdog sh /data_bak/etc/config/minerstat/whats_beat.sh
 	fi
 fi
 
@@ -558,6 +558,12 @@ fi
 
 ########################
 # POST Config
+
+if [ -d "/data/etc/config" ]; then
+    CONFIG_FILE="pools"
+    CONFIG_PATH="/data/etc/config"
+fi
+
 cd $CONFIG_PATH/minerstat
 
 TOKEN=$1
