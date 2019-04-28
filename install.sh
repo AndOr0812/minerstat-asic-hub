@@ -310,6 +310,7 @@ rm inno_old_beat.sh
 rm bitmain_beat.sh
 rm braiins_beat.sh
 rm hyperbit_beat.sh
+rm whats_beat.sh
 
 echo "Downloading path: $CONFIG_PATH"
 
@@ -323,6 +324,7 @@ curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/bitmain_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/braiins_beat.sh
 curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/hyperbit_beat.sh
+curl --insecure -H 'Cache-Control: no-cache' -O -s https://raw.githubusercontent.com/minerstat/minerstat-asic-hub/master/whats_beat.sh
 
 # Oly for old Inno's
 if [ -d "/home/www/conf" ]; then
@@ -348,6 +350,7 @@ chmod 777 inno_beat.sh
 chmod 777 bitmain_beat.sh
 chmod 777 braiins_beat.sh
 chmod 777 hyperbit_beat.sh
+chmod 777 whats_beat.sh
 #ln -s runmeonboot /etc/rc.d/
 
 dir=$(pwd)
