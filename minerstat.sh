@@ -1,5 +1,5 @@
 #!/bin/sh
-exec 2>/dev/null
+#exec 2>/dev/null
 
 sleep 1
 
