@@ -468,7 +468,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
         fi
 
         # Wait after new sync round
-	sleep 40
+	sleep 30
         check
 
     }
@@ -477,8 +477,8 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
     #############################
     # SYNC LOOP
 
-    echo "Staring the hub.. (20 sec)"
-    sleep 20
+    echo "Staring the hub.. (10 sec)"
+    sleep 10
     check
 
 else
