@@ -537,8 +537,8 @@ if [ -f "/data/etc/init.d/boot" ]; then
 	else
 		echo "INSTALLING CRON FOR Hyperbit"
 		echo "screen -A -m -d -S watchdog sh /data_bak/etc/config/minerstat/whats_beat.sh" >> /data/etc/init.d/boot
-		screen -A -m -d -S watchdog sh /data_bak/etc/config/minerstat/whats_beat.sh
 	fi
+	screen -A -m -d -S watchdog sh /data_bak/etc/config/minerstat/whats_beat.sh
 fi
 
 
