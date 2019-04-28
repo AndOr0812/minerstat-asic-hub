@@ -64,6 +64,13 @@ if [ -f "/data/etc/config" ]; then
   opkg install curl
 fi
 
+# whatsminer
+if [ -f "/data/etc/init.d/boot" ]; then
+  opkg update
+  opkg install screen
+  opkg install curl
+fi
+
 #############################
 # TESTING CURL
 echo "-*-*-*-*-*-*-*-*-*-*-*-*"
