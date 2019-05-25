@@ -201,15 +201,21 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
                 sleep 1 # REST A BIT
                 echo "CONFIG => Updating $CONFIG_PATH/$CONFIG_FILE "
                 rm "$CONFIG_PATH/$CONFIG_FILE"
-                curl -f --silent -L --insecure "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC" > "$CONFIG_PATH/$CONFIG_FILE"
-                POSTDATA="REBOOT"
-                sleep 6
-                # DEBUG
-                cat "$CONFIG_PATH/$CONFIG_FILE"
-                sleep 3
-                echo "REBOOTING MINER..."
-           	    /sbin/shutdown -r now
-            	  /sbin/reboot
+		rm "/tmp/tmpconf"
+                curl -f --silent -L --insecure "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC" > "/tmp/tmpconf"
+		sleep 6
+		CONFSIZE=$(cat "/tmp/tmpconf" | wc -l)
+		if [ "$CONFSIZE" -gt "7" ]; then
+                	POSTDATA="REBOOT"
+			cat "$CONFIG_PATH/$CONFIG_FILE"
+			# DEBUG
+                	sleep 3
+                	echo "REBOOTING MINER..."
+           	  	/sbin/shutdown -r now
+            	  	/sbin/reboot
+		else
+			echo "Config was blank, skip reboot"
+		fi
             fi
         fi
         if [ "$(printf '%s' "$POSTDATA")" = "RESTART" ]; then
