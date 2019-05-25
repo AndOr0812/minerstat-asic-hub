@@ -207,10 +207,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 		CONFSIZE=$(cat "/tmp/tmpconf" | wc -l)
 		if [ "$CONFSIZE" -gt "7" ]; then
                 	POSTDATA="REBOOT"
-			cat "$CONFIG_PATH/$CONFIG_FILE"
 			cp "/tmp/tmpconf" "$CONFIG_PATH/$CONFIG_FILE"
 			# DEBUG
                 	sleep 3
+			cat "$CONFIG_PATH/$CONFIG_FILE"
                 	echo "REBOOTING MINER..."
            	  	/sbin/shutdown -r now
             	  	/sbin/reboot
