@@ -419,12 +419,18 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 	    		CONFIG_PATH="/data/etc/config"
       		fi
                 echo "CONFIG => Updating $CONFIG_PATH/$CONFIG_FILE "
-                rm "$CONFIG_PATH/$CONFIG_FILE"
-                curl -f --silent -L --insecure "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC" > "$CONFIG_PATH/$CONFIG_FILE"
-                POSTDATA="REBOOT"
-                sleep 6
-                # DEBUG
-                cat "$CONFIG_PATH/$CONFIG_FILE"
+                rm "$CONFIG_PATH/$CONFIG_FILE"		
+		rm "/tmp/tmpconf"
+                curl -f --silent -L --insecure "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC" > "/tmp/tmpconf"
+		sleep 6
+		CONFSIZE=$(cat "/tmp/tmpconf" | wc -l)
+		if [ "$CONFSIZE" -gt "6" ]; then
+                	POSTDATA="REBOOT"
+			cp "/tmp/tmpconf" "$CONFIG_PATH/$CONFIG_FILE"
+			cat "$CONFIG_PATH/$CONFIG_FILE"
+		else
+			echo "Config was blank, skip reboot"
+		fi	
                 sleep 3
                 echo "REBOOTING MINER..."
             	# SPONDS need reboot -f
