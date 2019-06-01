@@ -524,12 +524,9 @@ if [ -f "/usr/app/userapp.sh" ]; then
 		echo "Crontab is ok!"
 	else
 		echo "INSTALLING CRON FOR Hyperbit"
-		echo "/usr/app/minerstat/hyperbit_beat.sh&" >> /usr/app/userapp.sh
-		rm /usr/app/reset_key2.sh
-		cp /usr/app/reset_key.sh reset_key.sh.bak
-		awk '(c==1) {print "nohup /usr/app/minerstat/hyperbit_beat.sh&"} (c!=1) {print $0} {c++}' /usr/app/reset_key.sh > /usr/app/reset_key2.sh
-		rm /usr/app/reset_key.sh
-		cp /usr/app/reset_key2.sh /usr/app/reset_key.sh
+		printf '%s\n' '#!/bin/bash' 'nohup /usr/app/minerstat/hyperbit_beat.sh&' | tee -a /etc/rc.local
+		chmod +x /etc/rc.local
+		systemctl enable rc-local
 	fi
 fi
 
