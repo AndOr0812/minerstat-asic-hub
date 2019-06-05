@@ -180,19 +180,23 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
         # echo $RESPONSE
 
 			if [ "$SYNC_ROUND" = "135" ]; then
-				rm "$CONFIG_PATH/server.json"
-				POSTIT=$(cd $CONFIG_PATH; wget -O server.json "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC")
-				if [ -s "$CONFIG_PATH/server.json" ]
-	   		then
-   					#echo " file exists and is not empty "
-					rm "/$CONFIG_PATH/$CONFIG_FILE"
-					cp -f "/$CONFIG_PATH/server.json" "/$CONFIG_PATH/$CONFIG_FILE"
-					chmod 777 "/$CONFIG_PATH/$CONFIG_FILE"
-					echo "CONFIG UPDATED FROM SERVER SIDE"
-					cat "/$CONFIG_PATH/$CONFIG_FILE"
-			    else
-  				echo " file does not exist, or is empty "
-			    fi
+			cd $CONFIG_PATH #ENTER CONFIG DIRECTORY
+                sleep 1 # REST A BIT
+                echo "CONFIG => Updating $CONFIG_PATH/$CONFIG_FILE "
+                rm "$CONFIG_PATH/$CONFIG_FILE"
+		rm "/tmp/tmpconf"
+                curl -f --silent -L --insecure "http://static.minerstat.farm/asicproxy.php?token=$TOKEN&worker=$WORKER&type=$ASIC" > "/tmp/tmpconf"
+		sleep 6
+		CONFSIZE=$(cat "/tmp/tmpconf" | wc -l)
+		if [ "$CONFSIZE" -gt "7" ]; then
+                	POSTDATA="REBOOT"
+			cp "/tmp/tmpconf" "$CONFIG_PATH/$CONFIG_FILE"
+			# DEBUG
+                	sleep 3
+			cat "$CONFIG_PATH/$CONFIG_FILE"
+		else
+			echo "Config was blank, skip reboot"
+		fi
 			fi
 
         if [ "$(printf '%s' "$POSTDATA")" = "CONFIG" ]; then
