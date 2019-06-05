@@ -189,7 +189,6 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 		sleep 6
 		CONFSIZE=$(cat "/tmp/tmpconf" | wc -l)
 		if [ "$CONFSIZE" -gt "7" ]; then
-                	POSTDATA="REBOOT"
 			cp "/tmp/tmpconf" "$CONFIG_PATH/$CONFIG_FILE"
 			# DEBUG
                 	sleep 3
