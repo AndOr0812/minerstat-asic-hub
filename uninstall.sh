@@ -6,6 +6,14 @@ echo "Uninstall => Start"
 # kill running process
 screen -S minerstat -X quit
 screen -S ms-run -X quit # kill running process
+killall minerstat.sh
+killall minerstat_antminer.sh
+killall spond_beat.sh
+killall inno_beat.sh
+killall hyperbit_beat.sh
+killall braiins_beat.sh
+killall bitmain_beat.sh
+killall baikal_beat.sh
 echo "minerstat => Killed"
 
 
@@ -25,23 +33,52 @@ fi
 rm /etc/init.d/minerstat &> /dev/null
 
 # MINERSTAT REMOVE
-# ANTMINER
 if [ -d "/config" ]; then
-    CONFIG_PATH="/config"
+    if [ -f "/config/cgminer.conf" ]; then
+        CONFIG_PATH="/config"
+    fi
+    if [ -f "/config/bmminer.conf" ]; then
+        CONFIG_PATH="/config"
+    fi
 fi
-# BAIKAL
-if [ -d "/opt/scripta/etc" ]; then
-    CONFIG_PATH="/opt/scripta/etc"
-fi
-# DAYUN
+
 if [ -d "/var/www/html/resources" ]; then
     CONFIG_PATH="/var/www/html/resources"
 fi
-# INNOSILICON
+
+############################
+# Spondoolies
+if [ -f "/etc/cgminer.conf" ]; then
+		CONFIG_PATH="/etc"
+fi
+
+if [ -f "/opt/scripta/etc/miner.conf" ]; then
+    CONFIG_PATH="/opt/scripta/etc"
+fi
+
+if grep -q InnoMiner "/etc/issue"; then
+	if [ -d "/config" ]; then
+		if [ -f "/config/cgminer.conf" ]; then
+			CONFIG_PATH="/config"	
+		fi
+	fi
+fi
+
+if [ -f "/www/luci-static/resources/braiinsOS_logo.svg" ]; then
+    CONFIG_PATH="/etc"
+fi
+
 if [ -d "/home/www/conf" ]; then
     CONFIG_PATH="/home/www/conf"
 fi
 
+if [ -d "/data/etc/config" ]; then
+    CONFIG_PATH="/data_bak/etc/config"
+fi
+
+if [ -d "/usr/app" ]; then
+    CONFIG_PATH="/usr/app"
+fi
 
 echo "Remove => /$CONFIG_PATH/minerstat/*"
 rm -rf "/$CONFIG_PATH/minerstat"
