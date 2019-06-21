@@ -81,7 +81,7 @@ if [ -d "/usr/app" ]; then
 fi
 
 echo "Remove => /$CONFIG_PATH/minerstat/*"
-rm -rf "/$CONFIG_PATH/minerstat"
+rm -rf "$CONFIG_PATH/minerstat"
 
 echo "Uninstall => Done"
 
