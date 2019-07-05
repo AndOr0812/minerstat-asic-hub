@@ -20,6 +20,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
     mkdir -p /var/spool/cron/crontabs 
     #echo "* * * * * screen -wipe" > /var/spool/cron/crontabs/root
     echo "* * * * * /bin/sh /config/minerstat/bitmain_beat.sh" > /var/spool/cron/crontabs/root
+    echo "*/10 * * * * killall minerstat_antminer.sh" >> /var/spool/cron/crontabs/root
     start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 
 
     sleep 5
