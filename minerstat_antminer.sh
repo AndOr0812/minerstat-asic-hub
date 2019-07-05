@@ -22,7 +22,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
     echo "* * * * * /bin/sh /config/minerstat/bitmain_beat.sh" > /var/spool/cron/crontabs/root
     start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 
 
-    sleep 10
+    sleep 5
 
     echo "-------- WAITING FOR CONNECTION -----------------"
 
@@ -255,6 +255,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 
     while true
 	  do
+	      echo "LOOP (CHECK)"
 	      sleep 45
 	      check
 	  done
