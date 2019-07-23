@@ -7,6 +7,24 @@ screen -wipe
 
 sleep 1
 
+# Fix inno crontab
+if grep -q InnoMiner "/etc/issue"; then
+	if [ -d "/config" ]; then
+		if [ -f "/config/cgminer.conf" ]; then
+		        mkdir -p /var/spool/cron/crontabs 
+    			echo "* * * * * /bin/sh /config/minerstat/inno_beat.sh" > /var/spool/cron/crontabs/root
+    			start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 			
+		fi
+	fi
+fi
+
+# FIX DAYUN crontab
+if [ -d "/var/www/html/resources" ]; then
+	mkdir -p /var/spool/cron/crontabs 
+    	echo "* * * * * /bin/sh /var/www/html/resources/minerstat/hbeat.sh" > /var/spool/cron/crontabs/root
+    	start-stop-daemon -S -q -p /var/run/crond.pid --exec /usr/sbin/crond -- -l 9 
+fi
+
 if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 
     echo "--------- MINERSTAT ASIC HUB -----------"
