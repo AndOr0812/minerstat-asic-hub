@@ -49,7 +49,7 @@ Make sure you replace **ACCESS_KEY** / **WORKER** to your details in the end of 
 For **BAIKAL** need to run **sudo su** before installation. (You need to see root@ over SSH not baikal@)
 
 ``` sh
-cd /tmp && wget -O install.sh http://static.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh ACCESS_KEY WORKER
+cd /tmp && wget -O install.sh http://static-ssl.minerstat.farm/github/install.sh && chmod 777 *.sh && sh install.sh ACCESS_KEY WORKER
 ```
 
 ## Install on Spondoolies ASIC Miner
