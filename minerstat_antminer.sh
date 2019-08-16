@@ -217,8 +217,10 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
                 	sleep 3
 			cat "$CONFIG_PATH/$CONFIG_FILE"
                 	echo "REBOOTING MINER..."
-           	  	/sbin/shutdown -r now
-            	  	/sbin/reboot
+           	  	/etc/init.d/cgminer.sh restart >/dev/null 2>&1
+			/etc/init.d/bmminer.sh restart >/dev/null 2>&1
+			#/sbin/shutdown -r now
+            	  	#/sbin/reboot
 		else
 			echo "Config was blank, skip reboot"
 		fi
