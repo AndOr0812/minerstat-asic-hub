@@ -167,7 +167,7 @@ if ! screen -list | grep -q "ms-run" || [ "$1" = "forcestart" ]; then
 
     # 4) SEND DATA TO THE SERVER
     post() {
-    POSTDATA=$(curl -s --insecure --header "Content-type: application/x-www-form-urlencoded" --request POST --data "token=$TOKEN" --data "worker=$WORKER" --data "ip=$LOCALIP" --data "data=$RESPONSE" https://api.minerstat.com/v2/get_asic)
+    POSTDATA=$(curl -s --insecure --header "Content-type: application/x-www-form-urlencoded" --request POST --data "token=$TOKEN" --data "worker=$WORKER" --data "ip=$LOCALIP" --data "data=$RESPONSE" https://api.minerstat.com:2053/v2/get_asic)
     remoteCMD
     }
 
